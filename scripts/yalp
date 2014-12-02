@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+# vim: set et ts=4 sw=4 fileencoding=utf-8:
+'''
+Script to run yalp
+'''
+import argparse
+
+from yalp import version
+
+
+def main():
+    '''
+    Main function for yalp. It handels parsin command line args and
+    starting the service.
+    '''
+    parser = argparse.ArgumentParser(description='YALP')
+    parser.add_argument('-v', '--version',
+                        action='store_true',
+                        default=False,
+                        help='Display YALP version')
+    args = parser.parse_args()
+
+    if args.version:
+        print version.__version__
+
+
+if __name__ == '__main__':
+    main()
