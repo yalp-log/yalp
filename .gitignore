@@ -3,3 +3,5 @@
 *.tox
 *.py[ocd]
 *.orig
+*.egg-info
+dist
