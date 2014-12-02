@@ -5,3 +5,6 @@
 *.orig
 *.egg-info
 dist
+.coverage
+nosetests.xml
+coverage.xml
