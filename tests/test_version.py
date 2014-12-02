@@ -5,6 +5,7 @@ tests.test_version
 '''
 import unittest
 
+
 class TestVersion(unittest.TestCase):
     '''
     Test getting version
