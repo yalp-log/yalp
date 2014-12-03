@@ -6,7 +6,7 @@ tests.test_parser
 import unittest
 from nose.tools import raises
 
-from yalp.parsers import process_message
+from yalp.parsers import tasks
 from yalp.exceptions import ImproperlyConfigured
 
 
@@ -20,7 +20,7 @@ class TestParser(unittest.TestCase):
             'class': 'PlainParser',
         }
         message = 'test message'
-        parsed = process_message(config, message)
+        parsed = tasks.process_message(config, message)
         self.assertEqual(parsed, message)
 
     @raises(ImproperlyConfigured)
@@ -29,7 +29,7 @@ class TestParser(unittest.TestCase):
             'module': 'yalp.parsers.plain',
         }
         message = 'test message'
-        process_message(config, message)
+        tasks.process_message(config, message)
 
     @raises(ImproperlyConfigured)
     def test_process_message_invalid_parser(self):
@@ -38,4 +38,4 @@ class TestParser(unittest.TestCase):
             'class': 'BogusClass',
         }
         message = 'test message'
-        process_message(config, message)
+        tasks.process_message(config, message)

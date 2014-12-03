@@ -53,7 +53,11 @@ SETUP_KWARGS = {
     'packages': ['yalp'],
     'package_data': {},
     'data_files': [],
-    'scripts': ['scripts/yalp'],
+    'scripts': [
+        'scripts/yalp',
+        'scripts/yalp-parsers',
+        'scripts/yalp-outputers',
+    ],
     'install_requires': REQUIREMENTS,
     'zip_safe': False,
 }

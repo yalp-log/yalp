@@ -18,18 +18,12 @@ def main():
                         action='store_true',
                         default=False,
                         help='Display YALP version')
-    parser.add_argument('message',
-                        metavar='message',
-                        type=str,
-                        nargs='?',
-                        default='test message',
-                        help='Message to process')
     args = parser.parse_args()
 
     if args.version:
         print version.__version__
     else:
-        scripts.cli_main(args.message)
+        scripts.parsers_main()
 
 
 if __name__ == '__main__':

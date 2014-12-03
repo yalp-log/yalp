@@ -3,32 +3,21 @@
 yalp.outputs
 ============
 '''
-from celery import shared_task
-from ..exceptions import ImproperlyConfigured
+import logging
+
+logger = logging.getLogger(__name__)
 
 
-def _get_outputer(config):
+class BaseOutputer(object):
     '''
-    Get the outputer class from the config
+    Base outputer.
     '''
-    try:
-        outputer_module_name = config['module']
-        outputer_class_name = config['class']
-        outputer_module = __import__(outputer_module_name,
-                                     fromlist=[outputer_class_name])
-        outputer_class = getattr(outputer_module, outputer_class_name)
-        return outputer_class()
-    except KeyError:
-        raise ImproperlyConfigured('Invalid config.')
-    except ImportError:
-        raise ImproperlyConfigured('Invalid outputer module/class.')
 
+    def __init__(self, config):
+        self.config = config
 
-@shared_task
-def process_output(config, event):
-    '''
-    Output events
-    '''
-    for output_config in config:
-        outputer = _get_outputer(output_config)
-        outputer.output(event)
+    def output(self, event):
+        '''
+        Parse the log message.
+        '''
+        logger.info(event)
