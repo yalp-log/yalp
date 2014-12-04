@@ -7,7 +7,6 @@ import os
 import yaml
 
 from .utils import LazyObject
-from .exceptions import ImproperlyConfigured
 
 import logging
 logger = logging.getLogger(__name__)

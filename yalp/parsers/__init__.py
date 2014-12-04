@@ -10,8 +10,7 @@ class BaseParser(object):
     Base parser.
     '''
 
-    def __init__(self, type=None, tags=None, **kwargs):
-        self.type_ = type
+    def __init__(self, tags=None, **kwargs):  # pylint: disable=W0613
         self.tags = tags or []
 
     def parse(self, message):
@@ -21,7 +20,6 @@ class BaseParser(object):
         event = {
             'message': message,
             'tags': self.tags,
-            'type': self.type_,
         }
         from yalp.outputs import tasks
         tasks.process_output.delay(event)

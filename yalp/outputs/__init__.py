@@ -12,7 +12,7 @@ class BaseOutputer(object):
     '''
     Base outputer.
     '''
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs):  # pylint: disable=W0613
         super(BaseOutputer, self).__init__()
 
     def output(self, event):

@@ -27,18 +27,27 @@ def _get_parser(**config):
 
 
 class ParserTask(Task):
+    '''
+    Parser celery task.
+    '''
     abstract = True
     _config = None
     _parsers = None
 
     @property
     def config(self):
+        '''
+        Get the parsers configuration.
+        '''
         if self._config is None:
             self._config = settings.parsers
         return self._config
 
     @property
     def parsers(self):
+        '''
+        Get the list of parser classes.
+        '''
         if self._parsers is None:
             self._parsers = [_get_parser(**conf) for conf in self.config]
         return self._parsers

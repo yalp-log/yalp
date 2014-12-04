@@ -14,4 +14,3 @@ class PlainOutputer(BaseOutputer):
     def output(self, event):
         print(event)
         super(PlainOutputer, self).output(event)
-
