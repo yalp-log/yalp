@@ -40,7 +40,6 @@ class OutputTask(Task):
     @property
     def outputers(self):
         if self._outputers is None:
-            print 'getting outputers'
             self._outputers = [_get_outputer(**conf) for conf in self.config]
         return self._outputers
 

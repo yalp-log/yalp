@@ -61,6 +61,7 @@ class ParsersEntryPoint(BaseEntryPoint):
         super(ParsersEntryPoint, self).__init__(config_path=config_path)
         self.app.worker_main([
             'yalp-parsers',
+            '--concurrency={0}'.format(self.config['parser_workers']),
             '--queues={0}'.format(self.config['parser_queue']),
             '--hostname={0}-{1}'.format(
                 _get_hostname(),
@@ -77,6 +78,7 @@ class OutputersEntryPoint(BaseEntryPoint):
         super(OutputersEntryPoint, self).__init__(config_path=config_path)
         self.app.worker_main([
             'yalp-outputers',
+            '--concurrency={0}'.format(self.config['output_workers']),
             '--queues={0}'.format(self.config['output_queue']),
             '--hostname={0}-{1}'.format(
                 _get_hostname(),

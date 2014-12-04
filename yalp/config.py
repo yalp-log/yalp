@@ -16,6 +16,8 @@ DEFAULT_OPTS = {
     'output_queue': 'outputs',
     'parser_worker_name': 'parser-workers',
     'output_worker_name': 'output-workers',
+    'parser_workers': 5,
+    'output_workers': 1,
 }
 
 
