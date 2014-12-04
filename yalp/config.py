@@ -21,6 +21,7 @@ DEFAULT_OPTS = {
     'output_worker_name': 'output-workers',
     'parser_workers': 5,
     'output_workers': 1,
+    'celery_advanced': {},
     'parsers': [
         {
             'module': 'yalp.parsers.plain',

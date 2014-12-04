@@ -40,6 +40,7 @@ def get_celery_app(config):
                 'queue': config.output_queue,
             },
         },
+        **config.celery_advanced
     )
     app.autodiscover_tasks(lambda: (
         'yalp.parsers',

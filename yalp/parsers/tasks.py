@@ -52,5 +52,7 @@ def process_message(message):
     message
         The message to process, generally a string.
     '''
+    ret = []
     for parser in process_message.parsers:
-        parser.parse(message)
+        ret.append(parser.parse(message))
+    return ret
