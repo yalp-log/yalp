@@ -10,10 +10,10 @@ class BaseParser(object):
     Base parser.
     '''
 
-    def __init__(self, config):
-        self.type_ = config.get('type')
-        self.tags = config.get('tags', [])
-        self.output_config = config.get('outputs', [])
+    def __init__(self, config, type=None, tags=None, **kwargs):
+        self.config = config
+        self.type_ = type
+        self.tags = tags or []
 
     def parse(self, message):
         '''
@@ -25,5 +25,5 @@ class BaseParser(object):
             'type': self.type_,
         }
         from yalp.outputs import tasks
-        tasks.process_output.delay(self.output_config, event)
+        tasks.process_output.delay(self.config, event)
         return message

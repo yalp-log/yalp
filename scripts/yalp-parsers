@@ -18,12 +18,15 @@ def main():
                         action='store_true',
                         default=False,
                         help='Display YALP version')
+    parser.add_argument('-c', '--config',
+                        default=None,
+                        help='Specify alternative config')
     args = parser.parse_args()
 
     if args.version:
         print version.__version__
     else:
-        scripts.parsers_main()
+        scripts.ParsersEntryPoint(args.config)
 
 
 if __name__ == '__main__':

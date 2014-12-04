@@ -13,7 +13,7 @@ class BaseOutputer(object):
     Base outputer.
     '''
 
-    def __init__(self, config):
+    def __init__(self, config, **kwargs):
         self.config = config
 
     def output(self, event):

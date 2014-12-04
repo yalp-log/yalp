@@ -4,82 +4,92 @@ yalp.scripts
 ============
 '''
 from celery import Celery
-from kombu import Exchange, Queue
 
 import logging
 logger = logging.getLogger(__name__)
 
+from .config import load_config
 
-def get_parsers_app():
+
+def _get_hostname():
+    '''
+    Get system's hostname for worker process name.
+    '''
+    import socket
+    hostname = socket.gethostname()
+    del socket
+    return hostname
+
+
+def get_celery_app(config):
     '''
     Create the parsers celery app.
     '''
-    parsers_app = Celery()
-    parsers_app.conf.update(
-        BROKER_URL='amqp://guest:guest@localhost:5672//',
+    app = Celery()
+    app.conf.update(
+        BROKER_URL=config['broker_url'],
         CELERY_ROUTES={
-            'yalp.parsers.tasks.process_message': {'queue': 'parse'},
-            'yalp.outputs.tasks.process_output': {'queue': 'outputs'},
+            'yalp.parsers.tasks.process_message': {
+                'queue': config['parser_queue'],
+            },
+            'yalp.outputs.tasks.process_output': {
+                'queue': config['output_queue'],
+            },
         },
     )
-    parsers_app.autodiscover_tasks(lambda: ('yalp.parsers',))
-    return parsers_app
+    app.autodiscover_tasks(lambda: (
+        'yalp.parsers',
+        'yalp.outputs',
+    ))
+    return app
 
 
-def get_outputers_app():
+class BaseEntryPoint(object):
     '''
-    Create the outputers celery app.
+    Common entry point code.
     '''
-    outputers_app = Celery()
-    outputers_app.conf.update(
-        BROKER_URL='amqp://guest:guest@localhost:5672//',
-        CELERY_ROUTES={
-            'yalp.parsers.tasks.process_message': {'queue': 'parse'},
-            'yalp.outputs.tasks.process_output': {'queue': 'outputs'},
-        },
-    )
-    outputers_app.autodiscover_tasks(lambda: ('yalp.outputs',))
-    return outputers_app
+    def __init__(self, config_path=None):
+        self.config = load_config(config_path)
+        self.app = get_celery_app(self.config)
 
 
-def parsers_main():
+class ParsersEntryPoint(BaseEntryPoint):
     '''
     Entry point for starting parser workers.
     '''
-    parsers_app = get_parsers_app()
-    parsers_app.worker_main([
-        'yalp-parsers',
-        '--queues=parse',
-        '--hostname=parser-workers',
-    ])
+    def __init__(self, config_path=None):
+        super(ParsersEntryPoint, self).__init__(config_path=config_path)
+        self.app.worker_main([
+            'yalp-parsers',
+            '--queues={0}'.format(self.config['parser_queue']),
+            '--hostname={0}-{1}'.format(
+                _get_hostname(),
+                self.config['parser_worker_name'],
+            )
+        ])
 
 
-def outputers_main():
+class OutputersEntryPoint(BaseEntryPoint):
     '''
     Entry point for starting outputers workers.
     '''
-    outputers_app = get_outputers_app()
-    outputers_app.worker_main([
-        'yalp-outputers',
-        '--queues=outputs',
-        '--hostname=output-workers',
-    ])
+    def __init__(self, config_path=None):
+        super(OutputersEntryPoint, self).__init__(config_path=config_path)
+        self.app.worker_main([
+            'yalp-outputers',
+            '--queues={0}'.format(self.config['output_queue']),
+            '--hostname={0}-{1}'.format(
+                _get_hostname(),
+                self.config['output_worker_name'],
+            )
+        ])
 
 
-def cli_main(message='test message'):
+class CliEntryPoint(BaseEntryPoint):
     '''
     Entry point for cli.
     '''
-    get_parsers_app()
-    config = {
-        'module': 'yalp.parsers.plain',
-        'class': 'PlainParser',
-        'outputs': [
-            {
-                'module': 'yalp.outputs.plain',
-                'class': 'PlainOutputer',
-            },
-        ],
-    }
-    from yalp.parsers import tasks
-    tasks.process_message.delay(config, message)
+    def __init__(self, config_path=None, message='test message'):
+        super(CliEntryPoint, self).__init__(config_path=config_path)
+        from yalp.parsers import tasks
+        tasks.process_message.delay(self.config, message)
