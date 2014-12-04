@@ -3,10 +3,13 @@
 yalp.config
 ===========
 '''
+import os
 import yaml
 
-import logging
+from .utils import LazyObject
+from .exceptions import ImproperlyConfigured
 
+import logging
 logger = logging.getLogger(__name__)
 
 
@@ -18,20 +21,12 @@ DEFAULT_OPTS = {
     'output_worker_name': 'output-workers',
     'parser_workers': 5,
     'output_workers': 1,
-}
-
-
-DEFAULT_PARSER_OPTS = {
     'parsers': [
         {
             'module': 'yalp.parsers.plain',
             'class': 'PlainParser',
         }
     ],
-}
-
-
-DEFAULT_OUTPUT_OPTS = {
     'outputs': [
         {
             'module': 'yalp.outputs.plain',
@@ -72,29 +67,23 @@ def load_config(path, defaults=None):
     return opts
 
 
-def load_parser_config(path, defaults=None):
+class LazySettings(LazyObject):
     '''
-    Read in config file.
+    Delay loading of settings.
     '''
-    if defaults is None:
-        defaults = DEFAULT_PARSER_OPTS
-
-    overrides = _read_conf_file(path)
-    opts = defaults.copy()
-    if overrides:
-        opts.update(overrides)
-    return opts['parsers']
+    def _setup(self):
+        settings_file = os.environ.get('YALP_CONFIG_FILE', None)
+        self._wrapped = Settings(settings_file)
 
 
-def load_output_config(path, defaults=None):
+class Settings(object):
     '''
-    Read in config file.
+    Load settings from yaml into object.
     '''
-    if defaults is None:
-        defaults = DEFAULT_OUTPUT_OPTS
+    def __init__(self, settings_file, defaults=None):
+        opts = load_config(settings_file, defaults=defaults)
+        for opt, value in opts.iteritems():
+            setattr(self, opt, value)
 
-    overrides = _read_conf_file(path)
-    opts = defaults.copy()
-    if overrides:
-        opts.update(overrides)
-    return opts['outputs']
+
+settings = LazySettings()

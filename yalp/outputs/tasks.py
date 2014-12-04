@@ -5,7 +5,7 @@ yalp.outputs.tasks
 '''
 from celery import shared_task, Task
 
-from ..config import load_output_config
+from ..config import settings
 from ..exceptions import ImproperlyConfigured
 
 
@@ -34,7 +34,7 @@ class OutputTask(Task):
     @property
     def config(self):
         if self._config is None:
-            self._config = load_output_config(None)
+            self._config = settings.outputs
         return self._config
 
     @property

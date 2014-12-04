@@ -10,10 +10,10 @@
 
 # Parsers configuration
 #parsers:
-#  module: 'yalp.parsers.plain'
-#  class: 'PlainParser'
+#  - module: 'yalp.parsers.plain'
+#    class: 'PlainParser'
 
 # Output configuration
 #outputs:
-#  module: 'yalp.outputs.plain',
-#  class: 'PlainOutputer',
+#  - module: 'yalp.outputs.plain',
+#    class: 'PlainOutputer',
