@@ -3,6 +3,8 @@
 yalp.scripts
 ============
 '''
+from __future__ import print_function
+
 from celery import Celery
 import os
 import sys
@@ -78,7 +80,7 @@ class BaseEntryPoint(object):
         self.add_arguments()
         self.options = self.parser.parse_args(self.argv[1:])
         if self.options.version:
-            print version.__version__
+            print(version.__version__)
             sys.exit(0)
         if self.options.config:
             os.environ['YALP_CONFIG_FILE'] = self.options.config

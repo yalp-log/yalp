@@ -82,7 +82,7 @@ class Settings(object):
     '''
     def __init__(self, settings_file, defaults=None):
         opts = load_config(settings_file, defaults=defaults)
-        for opt, value in opts.iteritems():
+        for opt, value in opts.items():
             setattr(self, opt, value)
 
 
