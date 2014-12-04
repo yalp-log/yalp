@@ -3,38 +3,54 @@
 yalp.parsers.tasks
 ==================
 '''
-from celery import shared_task
+from celery import shared_task, Task
 
+from ..config import load_parser_config
 from ..exceptions import ImproperlyConfigured
 
 
-def _get_parser(config, **kwargs):
+def _get_parser(**config):
     '''
     Get the parser class from the config
     '''
     try:
-        parser_module_name = kwargs['module']
-        parser_class_name = kwargs['class']
+        parser_module_name = config['module']
+        parser_class_name = config['class']
         parser_module = __import__(parser_module_name,
                                    fromlist=[parser_class_name])
         parser_class = getattr(parser_module, parser_class_name)
-        return parser_class(config, **kwargs)
+        return parser_class(**config)
     except KeyError:
         raise ImproperlyConfigured('Invalid config.')
     except ImportError:
         raise ImproperlyConfigured('Invalid parser module/class.')
 
 
-@shared_task
-def process_message(config, message):
+class ParserTask(Task):
+    abstract = True
+    _config = None
+    _parsers = None
+
+    @property
+    def config(self):
+        if self._config is None:
+            self._config = load_parser_config(None)
+        return self._config
+
+    @property
+    def parsers(self):
+        if self._parsers is None:
+            self._parsers = [_get_parser(**conf) for conf in self.config]
+        return self._parsers
+
+
+@shared_task(base=ParserTask)
+def process_message(message):
     '''
     Process a message using settings from config.
 
-    config
-        Dictionary of config settings defining how to process the message.
     message
         The message to process, generally a string.
     '''
-    for parser_config in config.get('parsers', []):
-        parser = _get_parser(config, **parser_config)
+    for parser in process_message.parsers:
         parser.parse(message)

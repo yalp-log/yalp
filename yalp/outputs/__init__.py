@@ -12,9 +12,8 @@ class BaseOutputer(object):
     '''
     Base outputer.
     '''
-
-    def __init__(self, config, **kwargs):
-        self.config = config
+    def __init__(self, **kwargs):
+        super(BaseOutputer, self).__init__()
 
     def output(self, event):
         '''

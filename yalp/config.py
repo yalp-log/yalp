@@ -16,12 +16,20 @@ DEFAULT_OPTS = {
     'output_queue': 'outputs',
     'parser_worker_name': 'parser-workers',
     'output_worker_name': 'output-workers',
+}
+
+
+DEFAULT_PARSER_OPTS = {
     'parsers': [
         {
             'module': 'yalp.parsers.plain',
             'class': 'PlainParser',
         }
     ],
+}
+
+
+DEFAULT_OUTPUT_OPTS = {
     'outputs': [
         {
             'module': 'yalp.outputs.plain',
@@ -60,3 +68,31 @@ def load_config(path, defaults=None):
     if overrides:
         opts.update(overrides)
     return opts
+
+
+def load_parser_config(path, defaults=None):
+    '''
+    Read in config file.
+    '''
+    if defaults is None:
+        defaults = DEFAULT_PARSER_OPTS
+
+    overrides = _read_conf_file(path)
+    opts = defaults.copy()
+    if overrides:
+        opts.update(overrides)
+    return opts['parsers']
+
+
+def load_output_config(path, defaults=None):
+    '''
+    Read in config file.
+    '''
+    if defaults is None:
+        defaults = DEFAULT_OUTPUT_OPTS
+
+    overrides = _read_conf_file(path)
+    opts = defaults.copy()
+    if overrides:
+        opts.update(overrides)
+    return opts['outputs']

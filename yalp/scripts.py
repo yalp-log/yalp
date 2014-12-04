@@ -92,4 +92,4 @@ class CliEntryPoint(BaseEntryPoint):
     def __init__(self, config_path=None, message='test message'):
         super(CliEntryPoint, self).__init__(config_path=config_path)
         from yalp.parsers import tasks
-        tasks.process_message.delay(self.config, message)
+        tasks.process_message.delay(message)
