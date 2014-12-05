@@ -40,10 +40,51 @@ class TestParser(YalpTestCase):
         parsed = tasks.process_message.delay(event)
         self.assertIn(event['message'], parsed.result)
 
+    @override_settings(parsers=[
+        {
+            'module': 'yalp.parsers.plain',
+            'class': 'PlainParser',
+        },
+        {
+            'module': 'yalp.parsers.plain',
+            'class': 'PlainParser',
+        },
+    ])
+    def test_multi_parsers(self):
+        ''' test processing a message with 2 parsers '''
+        event = {
+            'message': 'test message',
+        }
+        parsed = tasks.process_message.delay(event)
+        self.assertEqual(len(parsed.result), 2)
+        self.assertEqual(event['message'], parsed.result[0])
+        self.assertEqual(event['message'], parsed.result[1])
+
+    @override_settings(parsers=[
+        {
+            'module': 'yalp.parsers.plain',
+            'class': 'PlainParser',
+            'type_': 'test_type',
+        },
+        {
+            'module': 'yalp.parsers.plain',
+            'class': 'PlainParser',
+        },
+    ])
+    def test_typed_multi_parsers(self):
+        ''' test processing a typed message with 2 parsers '''
+        event = {
+            'message': 'test message',
+            'type': 'test_type',
+        }
+        parsed = tasks.process_message.delay(event)
+        self.assertIn(event['message'], parsed.result)
+        self.assertIn(None, parsed.result)
+
     @raises(ImproperlyConfigured)
     @override_settings(parsers=[{
         'module': 'yalp.parsers.plain',
-    }])
+    }])  # pylint: disable=R0201
     def test_invalid_config(self):
         ''' test raising exception on invalid config '''
         event = {
@@ -55,7 +96,7 @@ class TestParser(YalpTestCase):
     @override_settings(parsers=[{
         'module': 'bogus.module',
         'class': 'BogusClass',
-    }])
+    }])  # pylint: disable=R0201
     def test_invalid_parser(self):
         ''' test raising exception on invalid parser module/class '''
         event = {
