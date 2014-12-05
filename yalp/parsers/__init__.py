@@ -13,10 +13,6 @@ class BaseParser(BaseYalp):
     '''
     Base parser.
     '''
-
-    def __init__(self, type_=None, **kwargs):  # pylint: disable=W0613
-        self.type_ = type_
-
     def parse(self, event):
         '''
         Parse the log message.
