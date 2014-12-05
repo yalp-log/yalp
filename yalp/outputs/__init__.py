@@ -3,17 +3,16 @@
 yalp.outputs
 ============
 '''
+from .. import BaseYalp
+
 import logging
 logger = logging.getLogger(__name__)
 
 
-class BaseOutputer(object):
+class BaseOutputer(BaseYalp):
     '''
     Base outputer.
     '''
-    def __init__(self, type_=None, **kwargs):  # pylint: disable=W0613
-        self.type_ = type_
-
     def output(self, event):
         '''
         Parse the log message.

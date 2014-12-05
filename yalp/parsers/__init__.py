@@ -3,11 +3,13 @@
 yalp.parsers
 ============
 '''
+from .. import BaseYalp
+
 import logging
 logger = logging.getLogger(__name__)
 
 
-class BaseParser(object):
+class BaseParser(BaseYalp):
     '''
     Base parser.
     '''

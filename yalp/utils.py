@@ -3,6 +3,9 @@
 yalp.utils
 ==========
 '''
+from . import BaseYalp
+from .exceptions import ImproperlyConfigured
+
 EMPTY = object()
 
 
@@ -47,3 +50,24 @@ class LazyObject(object):
 
     __members__ = property(lambda self: self.__dir__())
     __dir__ = new_method_proxy(dir)
+
+
+def get_yalp_class(**config):
+    '''
+    Get a yalp input/parser/output class.
+    '''
+    try:
+        module_name = config['module']
+        class_name = config['class']
+        module = __import__(module_name, fromlist=[class_name])
+        class_ = getattr(module, class_name)
+        if 'type' in config:
+            config['type_'] = config['type']
+        instance = class_(**config)
+        if not isinstance(instance, BaseYalp):
+            raise ImportError
+        return instance
+    except KeyError:
+        raise ImproperlyConfigured('Invalid config.')
+    except ImportError:
+        raise ImproperlyConfigured('Invalid parser module/class.')

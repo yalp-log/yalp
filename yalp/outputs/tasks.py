@@ -6,24 +6,7 @@ yalp.outputs.tasks
 from celery import shared_task, Task
 
 from ..config import settings
-from ..exceptions import ImproperlyConfigured
-
-
-def _get_outputer(**config):
-    '''
-    Get the outputer class from the config
-    '''
-    try:
-        outputer_module_name = config['module']
-        outputer_class_name = config['class']
-        outputer_module = __import__(outputer_module_name,
-                                     fromlist=[outputer_class_name])
-        outputer_class = getattr(outputer_module, outputer_class_name)
-        return outputer_class(**config)
-    except KeyError:
-        raise ImproperlyConfigured('Invalid config.')
-    except ImportError:
-        raise ImproperlyConfigured('Invalid outputer module/class.')
+from ..utils import get_yalp_class
 
 
 class OutputTask(Task):
@@ -49,7 +32,7 @@ class OutputTask(Task):
         Get the list of output classes.
         '''
         if self._outputers is None:
-            self._outputers = [_get_outputer(**conf) for conf in self.config]
+            self._outputers = [get_yalp_class(**conf) for conf in self.config]
         return self._outputers
 
 

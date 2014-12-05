@@ -6,24 +6,7 @@ yalp.parsers.tasks
 from celery import shared_task, Task
 
 from ..config import settings
-from ..exceptions import ImproperlyConfigured
-
-
-def _get_parser(**config):
-    '''
-    Get the parser class from the config
-    '''
-    try:
-        parser_module_name = config['module']
-        parser_class_name = config['class']
-        parser_module = __import__(parser_module_name,
-                                   fromlist=[parser_class_name])
-        parser_class = getattr(parser_module, parser_class_name)
-        return parser_class(**config)
-    except KeyError:
-        raise ImproperlyConfigured('Invalid config.')
-    except ImportError:
-        raise ImproperlyConfigured('Invalid parser module/class.')
+from ..utils import get_yalp_class
 
 
 class ParserTask(Task):
@@ -49,7 +32,7 @@ class ParserTask(Task):
         Get the list of parser classes.
         '''
         if self._parsers is None:
-            self._parsers = [_get_parser(**conf) for conf in self.config]
+            self._parsers = [get_yalp_class(**conf) for conf in self.config]
         return self._parsers
 
 
