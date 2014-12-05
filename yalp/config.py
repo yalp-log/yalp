@@ -86,4 +86,37 @@ class Settings(object):
             setattr(self, opt, value)
 
 
+class UserSettingsHolder(object):
+    '''
+    Holder for user configured settings.
+    '''
+    def __init__(self, defaults=None):
+        self.__dict__['_deleted'] = set()
+        if not defaults:
+            defaults = DEFAULT_OPTS
+        self.default_settings = defaults
+
+    def __getattr__(self, name):
+        if name in self._deleted:
+            raise AttributeError
+        return getattr(self.default_settings, name)
+
+    def __setattr__(self, name, value):
+        self._deleted.discard(name)
+        super(UserSettingsHolder, self).__setattr__(name, value)
+
+    def __delattr__(self, name):
+        self._deleted.add(name)
+        if hasattr(self, name):
+            super(UserSettingsHolder, self).__delattr__(name)
+
+    def __dir__(self):
+        return list(self.__dict__) + dir(self.default_settings)
+
+    def is_overridden(self, setting):
+        deleted = (setting in self._deleted)
+        set_locally = (setting in self.__dict__)
+        set_on_default = getattr(self.default_settings, 'is_overridden', lambda s: False)(setting)
+        return deleted or set_locally or set_on_default
+
 settings = LazySettings()

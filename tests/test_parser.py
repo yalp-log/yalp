@@ -3,47 +3,64 @@
 tests.test_parser
 =================
 '''
-import unittest
 from nose.tools import raises
 
-from yalp.config import settings
+from yalp.test import YalpTestCase
+from yalp.test.utils import override_settings
 from yalp.parsers import tasks
-from yalp.scripts import get_celery_app
 from yalp.exceptions import ImproperlyConfigured
 
 
-class TestParser(unittest.TestCase):
+class TestParser(YalpTestCase):
     '''
     Test parser
     '''
-    def setUp(self):
-        settings.celery_advanced = {
-            'CELERY_ALWAYS_EAGER': True,
-        }
-        get_celery_app(settings)
-
+    @override_settings(parsers=[{
+        'module': 'yalp.parsers.plain',
+        'class': 'PlainParser',
+    }])
     def test_process_message(self):
-        settings.parers = [{
-            'module': 'yalp.parsers.plain',
-            'class': 'PlainParser',
-        }]
-        message = 'test message'
-        parsed = tasks.process_message.delay(message)
-        self.assertIn(message, parsed.result)
+        ''' test processing a simple message '''
+        event = {
+            'message': 'test message'
+        }
+        parsed = tasks.process_message.delay(event)
+        self.assertIn(event['message'], parsed.result)
+
+    @override_settings(parsers=[{
+        'module': 'yalp.parsers.plain',
+        'class': 'PlainParser',
+        'type_': 'test_type',
+    }])
+    def test_process_message_typed(self):
+        ''' test processing a simple typed message '''
+        event = {
+            'message': 'test message',
+            'type': 'test_type',
+        }
+        parsed = tasks.process_message.delay(event)
+        print parsed.result
+        self.assertIn(event['message'], parsed.result)
 
     @raises(ImproperlyConfigured)
-    def test_process_message_invalid_config(self):
-        settings.parsers = [{
-            'module': 'yalp.parsers.plain',
-        }]
-        message = 'test message'
-        tasks.process_message(message)
+    @override_settings(parsers=[{
+        'module': 'yalp.parsers.plain',
+    }])
+    def test_invalid_config(self):
+        ''' test raising exception on invalid config '''
+        event = {
+            'message': 'test message'
+        }
+        tasks.process_message(event)
 
     @raises(ImproperlyConfigured)
-    def test_process_message_invalid_parser(self):
-        settings.parsers = [{
-            'module': 'bogus.module',
-            'class': 'BogusClass',
-        }]
-        message = 'test message'
-        tasks.process_message(message)
+    @override_settings(parsers=[{
+        'module': 'bogus.module',
+        'class': 'BogusClass',
+    }])
+    def test_invalid_parser(self):
+        ''' test raising exception on invalid parser module/class '''
+        event = {
+            'message': 'test message'
+        }
+        tasks.process_message(event)

@@ -127,6 +127,9 @@ class CliEntryPoint(BaseEntryPoint):
     '''
     def add_arguments(self):
         super(CliEntryPoint, self).add_arguments()
+        self.parser.add_argument('-t', '--type',
+                                 default=None,
+                                 help='Specify message type')
         self.parser.add_argument('message',
                                  metavar='message',
                                  type=str,
@@ -136,5 +139,9 @@ class CliEntryPoint(BaseEntryPoint):
 
     def execute(self):
         super(CliEntryPoint, self).execute()
+        event = {
+            'message': self.options.message,
+            'type': self.options.type,
+        }
         from yalp.parsers import tasks
-        tasks.process_message.delay(self.options.message)
+        tasks.process_message.delay(event)

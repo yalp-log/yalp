@@ -3,6 +3,8 @@
 yalp.parsers
 ============
 '''
+import logging
+logger = logging.getLogger(__name__)
 
 
 class BaseParser(object):
@@ -10,17 +12,18 @@ class BaseParser(object):
     Base parser.
     '''
 
-    def __init__(self, tags=None, **kwargs):  # pylint: disable=W0613
-        self.tags = tags or []
+    def __init__(self, type_=None, **kwargs):  # pylint: disable=W0613
+        self.type_ = type_
 
-    def parse(self, message):
+    def parse(self, event):
         '''
         Parse the log message.
         '''
-        event = {
-            'message': message,
-            'tags': self.tags,
-        }
-        from yalp.outputs import tasks
-        tasks.process_output.delay(event)
-        return message
+        if self.type_ != event.get('type', None):
+            logger.info('%s skipping event %s: not same type',
+                        self.__class__.__name__,
+                        event)
+        else:
+            from yalp.outputs import tasks
+            tasks.process_output.delay(event)
+            return event['message']
