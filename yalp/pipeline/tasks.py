@@ -56,7 +56,6 @@ def process_message(event):
     message
         The message to process, generally a string.
     '''
-    print 'in process_message'
     return [parser.run(event) for parser in process_message.parsers]
 
 

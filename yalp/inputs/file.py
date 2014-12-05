@@ -3,6 +3,7 @@
 yalp.inputs.file
 ================
 '''
+from __future__ import print_function
 from . import BaseInputer
 
 
@@ -15,4 +16,4 @@ class FileInputer(BaseInputer):
         self.path = path
 
     def run(self):
-        print self.path
+        print(self.path)
