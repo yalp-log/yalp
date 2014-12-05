@@ -34,7 +34,7 @@ class PipelineTask(Task):
         '''
         if self._parsers is None:
             self._parsers = [
-                get_yalp_class(**conf) for conf in self.config.parsers]
+                get_yalp_class(conf) for conf in self.config.parsers]
         return self._parsers
 
     @property
@@ -44,7 +44,7 @@ class PipelineTask(Task):
         '''
         if self._outputers is None:
             self._outputers = [
-                get_yalp_class(**conf) for conf in self.config.outputs]
+                get_yalp_class(conf) for conf in self.config.outputs]
         return self._outputers
 
 

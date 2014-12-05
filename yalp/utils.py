@@ -9,13 +9,15 @@ from .exceptions import ImproperlyConfigured
 EMPTY = object()
 
 
+# pylint: disable=W0212
 def new_method_proxy(func):
     ''' Proxy function call to lazy get attrs '''
-    def inner(self, *args):                # pylint: disable=C0111
-        if self._wrapped is EMPTY:         # pylint: disable=W0212
-            self._setup()                  # pylint: disable=W0212
-        return func(self._wrapped, *args)  # pylint: disable=W0212
+    def inner(self, *args):  # pylint: disable=C0111
+        if self._wrapped is EMPTY:
+            self._setup()
+        return func(self._wrapped, *args)
     return inner
+# pylint: enable=W0212
 
 
 class LazyObject(object):
@@ -53,7 +55,7 @@ class LazyObject(object):
     __dir__ = new_method_proxy(dir)
 
 
-def get_yalp_class(**config):
+def get_yalp_class(config, instance_type=BasePipline):
     '''
     Get a yalp input/parser/output class.
     '''
@@ -65,7 +67,7 @@ def get_yalp_class(**config):
         if 'type' in config:
             config['type_'] = config['type']
         instance = class_(**config)
-        if not isinstance(instance, BasePipline):
+        if not isinstance(instance, instance_type):
             raise ImportError
         return instance
     except KeyError:

@@ -19,7 +19,7 @@ def start_inputs():
     Start inputers
     '''
     config = settings.inputs
-    inputers = [get_yalp_class(**conf) for conf in config]
+    inputers = [get_yalp_class(conf) for conf in config]
     for inputer in inputers:
         inputer.start()
 
