@@ -121,6 +121,16 @@ class OutputersEntryPoint(BaseEntryPoint):
         ])
 
 
+class InputsEntryPoint(BaseEntryPoint):
+    '''
+    Entry point for starting inputers.
+    '''
+    def execute(self):
+        super(InputsEntryPoint, self).execute()
+        from .inputs import start_inputs
+        start_inputs()
+
+
 class CliEntryPoint(BaseEntryPoint):
     '''
     Entry point for cli.

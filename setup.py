@@ -35,7 +35,7 @@ with open(YALP_REQS) as rfh:
 SETUP_KWARGS = {
     'name': 'yalp',
     'version': VER,
-    'url': 'https://github.com/shadowfax-chc/yalp',
+    'url': 'https://github.com/yalp-log/yalp',
     'license': 'Apache-2',
     'description': '',
     'author': 'Timothy Messier',
@@ -55,6 +55,7 @@ SETUP_KWARGS = {
     'data_files': [],
     'scripts': [
         'scripts/yalp',
+        'scripts/yalp-inputs',
         'scripts/yalp-parsers',
         'scripts/yalp-outputers',
     ],
