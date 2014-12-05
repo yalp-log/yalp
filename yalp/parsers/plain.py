@@ -11,6 +11,9 @@ class PlainParser(BaseParser):
     '''
     Print input
     '''
+    def __init__(self, *args, **kwargs):
+        super(PlainParser, self).__init__(*args, **kwargs)
+
     def parse(self, event):
         print(event)
         return event

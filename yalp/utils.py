@@ -3,7 +3,7 @@
 yalp.utils
 ==========
 '''
-from . import BaseYalp
+from .pipeline import BasePipline
 from .exceptions import ImproperlyConfigured
 
 EMPTY = object()
@@ -65,7 +65,7 @@ def get_yalp_class(**config):
         if 'type' in config:
             config['type_'] = config['type']
         instance = class_(**config)
-        if not isinstance(instance, BaseYalp):
+        if not isinstance(instance, BasePipline):
             raise ImportError
         return instance
     except KeyError:

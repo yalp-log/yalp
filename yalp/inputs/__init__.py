@@ -5,12 +5,10 @@ yalp.inputs
 '''
 from ..config import settings
 from ..utils import get_yalp_class
-from .. import BaseYalp
-
-from threading import Thread
+from ..pipeline import ThreadPipline
 
 
-class BaseInputer(BaseYalp, Thread):
+class BaseInputer(ThreadPipline):
     ''' Base Inputer '''
     def __init__(self, *args, **kwargs):
         super(BaseInputer, self).__init__(*args, **kwargs)

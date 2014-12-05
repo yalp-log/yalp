@@ -3,26 +3,21 @@
 yalp.outputs
 ============
 '''
-from .. import BaseYalp
+from ..pipeline import CeleryPipeline
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-class BaseOutputer(BaseYalp):
+class BaseOutputer(CeleryPipeline):
     '''
     Base outputer.
     '''
-    def run(self, event):
-        '''
-        Parse the log message.
-        '''
-        if self.type_ != event.get('type', None):
-            logger.info('%s skipping event %s: not same type',
-                        self.__class__.__name__,
-                        event)
-        else:
-            self.output(event)
+    def __init__(self, *args, **kwargs):
+        super(BaseOutputer, self).__init__(*args, **kwargs)
+
+    def process_event(self, event):
+        return self.output(event)
 
     def output(self, event):
         '''

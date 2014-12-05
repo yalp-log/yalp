@@ -11,5 +11,8 @@ class PlainOutputer(BaseOutputer):
     '''
     Print output
     '''
+    def __init__(self, *args, **kwargs):
+        super(PlainOutputer, self).__init__(*args, **kwargs)
+
     def output(self, event):
         print(event)

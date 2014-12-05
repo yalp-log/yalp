@@ -35,18 +35,17 @@ def get_celery_app(config):
     app.conf.update(
         BROKER_URL=config.broker_url,
         CELERY_ROUTES={
-            'yalp.pipline.tasks.process_message': {
+            'yalp.pipeline.tasks.process_message': {
                 'queue': config.parser_queue,
             },
-            'yalp.pipline.tasks.process_output': {
+            'yalp.pipeline.tasks.process_output': {
                 'queue': config.output_queue,
             },
         },
         **config.celery_advanced
     )
     app.autodiscover_tasks(lambda: (
-        'yalp.parsers',
-        'yalp.outputs',
+        'yalp.pipeline',
     ))
     return app
 

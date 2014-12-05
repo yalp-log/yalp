@@ -3,29 +3,24 @@
 yalp.parsers
 ============
 '''
-from .. import BaseYalp
+from ..pipeline import CeleryPipeline
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-class BaseParser(BaseYalp):
+class BaseParser(CeleryPipeline):
     '''
     Base parser.
     '''
-    def run(self, event):
-        '''
-        Parse the log message.
-        '''
-        if self.type_ != event.get('type', None):
-            logger.info('%s skipping event %s: not same type',
-                        self.__class__.__name__,
-                        event)
-        else:
-            parsed_event = self.parse(event)
-            from yalp.pipeline import tasks
-            tasks.process_output.delay(parsed_event)
-            return event['message']
+    def __init__(self, *args, **kwargs):
+        super(BaseParser, self).__init__(*args, **kwargs)
+
+    def process_event(self, event):
+        parsed_event = self.parse(event)
+        from yalp.pipeline import tasks
+        tasks.process_output.delay(parsed_event)
+        return event['message']
 
     def parse(self, event):
         '''
