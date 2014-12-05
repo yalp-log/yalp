@@ -15,5 +15,5 @@
 
 # Output configuration
 #outputs:
-#  - module: 'yalp.outputs.plain',
-#    class: 'PlainOutputer',
+#  - module: 'yalp.outputs.plain'
+#    class: 'PlainOutputer'
