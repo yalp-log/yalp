@@ -17,10 +17,7 @@ class BaseParser(CeleryPipeline):
         super(BaseParser, self).__init__(*args, **kwargs)
 
     def process_event(self, event):
-        parsed_event = self.parse(event)
-        from yalp.pipeline import tasks
-        tasks.process_output.delay(parsed_event)
-        return event['message']
+        return self.parse(event)
 
     def parse(self, event):
         '''

@@ -33,6 +33,7 @@ class CeleryPipeline(BasePipline):
             logger.info('%s skipping event %s: not same type',
                         self.__class__.__name__,
                         event)
+            return None
         else:
             return self.process_event(event)
 

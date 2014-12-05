@@ -24,7 +24,7 @@ class TestParser(YalpTestCase):
             'message': 'test message'
         }
         parsed = tasks.process_message.delay(event)
-        self.assertIn(event['message'], parsed.result)
+        self.assertIn(event, parsed.result)
 
     @override_settings(parsers=[{
         'module': 'yalp.parsers.plain',
@@ -38,7 +38,7 @@ class TestParser(YalpTestCase):
             'type': 'test_type',
         }
         parsed = tasks.process_message.delay(event)
-        self.assertIn(event['message'], parsed.result)
+        self.assertIn(event, parsed.result)
 
     @override_settings(parsers=[
         {
@@ -57,14 +57,14 @@ class TestParser(YalpTestCase):
         }
         parsed = tasks.process_message.delay(event)
         self.assertEqual(len(parsed.result), 2)
-        self.assertEqual(event['message'], parsed.result[0])
-        self.assertEqual(event['message'], parsed.result[1])
+        self.assertEqual(event, parsed.result[0])
+        self.assertEqual(event, parsed.result[1])
 
     @override_settings(parsers=[
         {
             'module': 'yalp.parsers.plain',
             'class': 'PlainParser',
-            'type_': 'test_type',
+            'type': 'test_type',
         },
         {
             'module': 'yalp.parsers.plain',
@@ -78,7 +78,7 @@ class TestParser(YalpTestCase):
             'type': 'test_type',
         }
         parsed = tasks.process_message.delay(event)
-        self.assertIn(event['message'], parsed.result)
+        self.assertIn(event, parsed.result)
         self.assertIn(None, parsed.result)
 
     @raises(ImproperlyConfigured)
