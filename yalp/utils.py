@@ -22,6 +22,8 @@ class LazyObject(object):
     '''
     Wrapper for another class to delay instantiation.
     '''
+    _wrapped = None
+
     def __init__(self):
         self._wrapped = EMPTY
 
@@ -48,7 +50,6 @@ class LazyObject(object):
         '''
         raise NotImplementedError
 
-    __members__ = property(lambda self: self.__dir__())
     __dir__ = new_method_proxy(dir)
 
 
