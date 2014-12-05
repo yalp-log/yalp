@@ -7,7 +7,8 @@ from functools import wraps
 from ..config import settings, UserSettingsHolder
 
 
-class override_settings(object):
+# pylint: disable=W0212
+class override_settings(object):  # pylint: disable=C0103
     '''
     Acts as either a decorator, or a context manager. If it's a decorator it
     takes a function and returns a wrapped function. If it's a contextmanager
@@ -24,7 +25,7 @@ class override_settings(object):
         self.disable()
 
     def __call__(self, test_func):
-        from yalp.test import YalpTestCase
+        from .testcase import YalpTestCase
         if isinstance(test_func, type):
             if not issubclass(test_func, YalpTestCase):
                 raise Exception(
@@ -34,12 +35,12 @@ class override_settings(object):
             return test_func
         else:
             @wraps(test_func)
-            def inner(*args, **kwargs):
+            def inner(*args, **kwargs):  # pylint: disable=C0111
                 with self:
                     return test_func(*args, **kwargs)
         return inner
 
-    def save_options(self, test_func):
+    def save_options(self, test_func):  # pylint: disable=C0111
         if test_func._overridden_settings is None:
             test_func._overridden_settings = self.options
         else:
@@ -48,6 +49,7 @@ class override_settings(object):
                 test_func._overridden_settings, **self.options)
 
     def enable(self):
+        ''' Enable overrides to settings.  '''
         override = UserSettingsHolder(settings._wrapped)
         for key, new_value in self.options.items():
             setattr(override, key, new_value)
@@ -55,5 +57,7 @@ class override_settings(object):
         settings._wrapped = override
 
     def disable(self):
+        ''' Disable overrides to settings. '''
         settings._wrapped = self.wrapped
         del self.wrapped
+# pylint: enable=W0212

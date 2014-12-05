@@ -5,8 +5,7 @@ tests.test_parser
 '''
 from nose.tools import raises
 
-from yalp.test import YalpTestCase
-from yalp.test.utils import override_settings
+from yalp.test import YalpTestCase, override_settings
 from yalp.parsers import tasks
 from yalp.exceptions import ImproperlyConfigured
 
@@ -39,7 +38,6 @@ class TestParser(YalpTestCase):
             'type': 'test_type',
         }
         parsed = tasks.process_message.delay(event)
-        print parsed.result
         self.assertIn(event['message'], parsed.result)
 
     @raises(ImproperlyConfigured)
