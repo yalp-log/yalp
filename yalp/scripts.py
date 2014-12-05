@@ -35,10 +35,10 @@ def get_celery_app(config):
     app.conf.update(
         BROKER_URL=config.broker_url,
         CELERY_ROUTES={
-            'yalp.parsers.tasks.process_message': {
+            'yalp.pipline.tasks.process_message': {
                 'queue': config.parser_queue,
             },
-            'yalp.outputs.tasks.process_output': {
+            'yalp.pipline.tasks.process_output': {
                 'queue': config.output_queue,
             },
         },
@@ -153,5 +153,5 @@ class CliEntryPoint(BaseEntryPoint):
             'message': self.options.message,
             'type': self.options.type,
         }
-        from yalp.parsers import tasks
+        from yalp.pipeline import tasks
         tasks.process_message.delay(event)

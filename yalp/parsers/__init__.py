@@ -23,7 +23,7 @@ class BaseParser(BaseYalp):
                         event)
         else:
             parsed_event = self.parse(event)
-            from yalp.outputs import tasks
+            from yalp.pipeline import tasks
             tasks.process_output.delay(parsed_event)
             return event['message']
 

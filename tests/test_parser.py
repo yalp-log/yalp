@@ -6,7 +6,7 @@ tests.test_parser
 from nose.tools import raises
 
 from yalp.test import YalpTestCase, override_settings
-from yalp.parsers import tasks
+from yalp.pipeline import tasks
 from yalp.exceptions import ImproperlyConfigured
 
 
