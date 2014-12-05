@@ -13,7 +13,7 @@ class BaseParser(BaseYalp):
     '''
     Base parser.
     '''
-    def parse(self, event):
+    def run(self, event):
         '''
         Parse the log message.
         '''
@@ -22,6 +22,13 @@ class BaseParser(BaseYalp):
                         self.__class__.__name__,
                         event)
         else:
+            parsed_event = self.parse(event)
             from yalp.outputs import tasks
-            tasks.process_output.delay(event)
+            tasks.process_output.delay(parsed_event)
             return event['message']
+
+    def parse(self, event):
+        '''
+        Parse the message and return event with parsed result.
+        '''
+        raise NotImplementedError

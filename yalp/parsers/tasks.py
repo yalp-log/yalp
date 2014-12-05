@@ -37,14 +37,12 @@ class ParserTask(Task):
 
 
 @shared_task(base=ParserTask)
-def process_message(message):
+def process_message(event):
     '''
     Process a message using settings from config.
 
     message
         The message to process, generally a string.
     '''
-    ret = []
-    for parser in process_message.parsers:
-        ret.append(parser.parse(message))
+    ret = [parser.run(event) for parser in process_message.parsers]
     return ret

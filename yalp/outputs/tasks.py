@@ -41,5 +41,5 @@ def process_output(event):
     '''
     Output events
     '''
-    for outputer in process_output.outputers:
-        outputer.output(event)
+    ret = [outputer.run(event) for outputer in process_output.outputers]
+    return ret

@@ -11,6 +11,6 @@ class PlainParser(BaseParser):
     '''
     Print input
     '''
-    def parse(self, message):
-        print(message)
-        return super(PlainParser, self).parse(message)
+    def parse(self, event):
+        print(event)
+        return event

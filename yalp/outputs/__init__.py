@@ -13,7 +13,7 @@ class BaseOutputer(BaseYalp):
     '''
     Base outputer.
     '''
-    def output(self, event):
+    def run(self, event):
         '''
         Parse the log message.
         '''
@@ -22,4 +22,10 @@ class BaseOutputer(BaseYalp):
                         self.__class__.__name__,
                         event)
         else:
-            logger.info(event)
+            self.output(event)
+
+    def output(self, event):
+        '''
+        Output the event.
+        '''
+        raise NotImplementedError
