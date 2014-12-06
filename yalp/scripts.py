@@ -7,6 +7,7 @@ from __future__ import print_function
 
 import os
 import sys
+import time
 import argparse
 
 import logging
@@ -14,7 +15,8 @@ logger = logging.getLogger(__name__)
 
 from . import version
 from .config import settings
-from .utils import get_celery_app
+from .utils import get_celery_app, get_yalp_class
+from .exceptions import ShutdownException
 
 
 def _get_hostname():
@@ -31,7 +33,7 @@ class BaseEntryPoint(object):
     '''
     Main Entry point.
     '''
-    def __init__(self, description=None, argv=None):
+    def __init__(self, description=None, argv=None, *args, **kwargs):
         self.argv = argv or sys.argv[:]
         self.prog_name = os.path.basename(self.argv[0])
         self.description = description or self.prog_name
@@ -97,14 +99,33 @@ class OutputersEntryPoint(BaseEntryPoint):
         ])
 
 
+def sigterm_handler(signo, stack_frame):
+    raise ShutdownException(signo)
+
+
 class InputsEntryPoint(BaseEntryPoint):
     '''
     Entry point for starting inputers.
     '''
+    def __init__(self, *args, **kwargs):
+        super(InputsEntryPoint, self).__init__(*args, **kwargs)
+
     def execute(self):
         super(InputsEntryPoint, self).execute()
-        from .inputs import start_inputs
-        start_inputs()
+        import signal
+        signal.signal(signal.SIGTERM, sigterm_handler)
+        signal.signal(signal.SIGINT, sigterm_handler)
+        self.inputers = [get_yalp_class(conf) for conf in settings.inputs]
+        try:
+            for inputer in self.inputers:
+                inputer.start()
+            while True:
+                time.sleep(1)
+        except ShutdownException:
+            for inputer in self.inputers:
+                inputer.stop()
+            for inputer in self.inputers:
+                inputer.join()
 
 
 class CliEntryPoint(BaseEntryPoint):

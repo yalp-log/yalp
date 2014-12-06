@@ -3,7 +3,7 @@
 yalp.pipeline
 =============
 '''
-from threading import Thread
+import threading
 
 import logging
 logger = logging.getLogger(__name__)
@@ -44,9 +44,17 @@ class CeleryPipeline(BasePipline):
         raise NotImplementedError
 
 
-class ThreadPipline(BasePipline, Thread):
+class ThreadPipline(BasePipline, threading.Thread):
     '''
     Pileline class that is used by threads.
     '''
     def __init__(self, *args, **kwargs):
         super(ThreadPipline, self).__init__(*args, **kwargs)
+        self._stop = threading.Event()
+
+    def stop(self):
+        self._stop.set()
+
+    @property
+    def stopped(self):
+        return self._stop.is_set()

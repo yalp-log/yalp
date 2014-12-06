@@ -9,3 +9,9 @@ class ImproperlyConfigured(Exception):
     '''
     Raised when configuration is not correct.
     '''
+
+
+class ShutdownException(Exception):
+    '''
+    Raised when sigterm is sent to shutdown.
+    '''
