@@ -5,7 +5,6 @@ yalp.scripts
 '''
 from __future__ import print_function
 
-from celery import Celery
 import os
 import sys
 import argparse
@@ -15,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 from . import version
 from .config import settings
+from .utils import get_celery_app
 
 
 def _get_hostname():
@@ -25,29 +25,6 @@ def _get_hostname():
     hostname = socket.gethostname()
     del socket
     return hostname
-
-
-def get_celery_app(config):
-    '''
-    Create the parsers celery app.
-    '''
-    app = Celery()
-    app.conf.update(
-        BROKER_URL=config.broker_url,
-        CELERY_ROUTES={
-            'yalp.pipeline.tasks.process_message': {
-                'queue': config.parser_queue,
-            },
-            'yalp.pipeline.tasks.process_output': {
-                'queue': config.output_queue,
-            },
-        },
-        **config.celery_advanced
-    )
-    app.autodiscover_tasks(lambda: (
-        'yalp.pipeline',
-    ))
-    return app
 
 
 class BaseEntryPoint(object):
@@ -153,4 +130,7 @@ class CliEntryPoint(BaseEntryPoint):
             'type': self.options.type,
         }
         from yalp.pipeline import tasks
-        tasks.process_message.delay(event)
+        if settings.parsers:
+            tasks.process_message.delay(event)
+        else:
+            tasks.process_output.delay(event)

@@ -3,6 +3,7 @@
 yalp.utils
 ==========
 '''
+from celery import Celery
 from .pipeline import BasePipline
 from .exceptions import ImproperlyConfigured
 
@@ -74,3 +75,26 @@ def get_yalp_class(config, instance_type=BasePipline):
         raise ImproperlyConfigured('Invalid config.')
     except ImportError:
         raise ImproperlyConfigured('Invalid parser module/class.')
+
+
+def get_celery_app(config):
+    '''
+    Create the parsers celery app.
+    '''
+    app = Celery()
+    app.conf.update(
+        BROKER_URL=config.broker_url,
+        CELERY_ROUTES={
+            'yalp.pipeline.tasks.process_message': {
+                'queue': config.parser_queue,
+            },
+            'yalp.pipeline.tasks.process_output': {
+                'queue': config.output_queue,
+            },
+        },
+        **config.celery_advanced
+    )
+    app.autodiscover_tasks(lambda: (
+        'yalp.pipeline',
+    ))
+    return app
