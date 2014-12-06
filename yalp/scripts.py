@@ -33,7 +33,11 @@ class BaseEntryPoint(object):
     '''
     Main Entry point.
     '''
-    def __init__(self, description=None, argv=None, *args, **kwargs):
+    def __init__(self,
+                 description=None,
+                 argv=None,
+                 *args,
+                 **kwargs):  # pylint: disable=W0613
         self.argv = argv or sys.argv[:]
         self.prog_name = os.path.basename(self.argv[0])
         self.description = description or self.prog_name
@@ -99,7 +103,10 @@ class OutputersEntryPoint(BaseEntryPoint):
         ])
 
 
-def sigterm_handler(signo, stack_frame):
+def sigterm_handler(signo, stack_frame):  # pylint: disable=W0613
+    '''
+    Catch signal and raise ShutdownException to preform cleanup.
+    '''
     raise ShutdownException(signo)
 
 

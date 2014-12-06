@@ -53,8 +53,10 @@ class ThreadPipline(BasePipline, threading.Thread):
         self._stop = threading.Event()
 
     def stop(self):
+        ''' Inform the thread to stop '''
         self._stop.set()
 
     @property
     def stopped(self):
+        ''' True if thread has been told to stop '''
         return self._stop.is_set()
