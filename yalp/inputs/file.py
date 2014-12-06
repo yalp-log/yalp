@@ -3,6 +3,7 @@
 yalp.inputs.file
 ================
 '''
+import tailer
 from . import BaseInputer
 
 
@@ -16,7 +17,7 @@ class FileInputer(BaseInputer):
 
     def run(self):
         with open(self.path, 'r') as in_file:
-            for line in in_file.readlines():
+            for line in tailer.follow(in_file):
                 event = {'message': line.strip()}
                 if self.type_:
                     event['type'] = self.type_
