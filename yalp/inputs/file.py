@@ -3,6 +3,8 @@
 yalp.inputs.file
 ================
 '''
+import os
+import hashlib
 import time
 import tailer
 from . import BaseInputer
@@ -16,6 +18,11 @@ class FileInputer(BaseInputer, tailer.Tailer):
         super(FileInputer, self).__init__(type_, *args, **kwargs)
         self.path = path
         self.read_size = read_size
+        self.sincedb_dir = os.environ['HOME']
+        self.sincedb = os.path.join(
+            self.sincedb_dir,
+            '.sincedb_{0}'.format(hashlib.md5(self.path).hexdigest())
+        )
 
     def _setup(self):
         '''
@@ -23,7 +30,11 @@ class FileInputer(BaseInputer, tailer.Tailer):
         '''
         self.file = open(self.path, 'r')
         self.start_pos = self.file.tell()
-        self.seek_end()
+        if os.path.exists(self.sincedb):
+            with open(self.sincedb, 'r') as sincedb_file:
+                for line in sincedb_file.readlines():
+                    position = line.strip()
+                    self.seek(int(position))
 
     def stoppable_follow(self, delay=1.0):
         '''
@@ -58,11 +69,14 @@ class FileInputer(BaseInputer, tailer.Tailer):
         '''
         Cleanup file handle, record current position.
         '''
+        with open(self.sincedb, 'w') as sincedb_file:
+            sincedb_file.write(str(self.file.tell()))
         self.file.close()
 
     def run(self):
+        self._setup()
         for line in self.stoppable_follow():
-            event = {'message': line.strip()}
+            event = {'message': line}
             if self.type_:
                 event['type'] = self.type_
             self.enqueue_event(event)
