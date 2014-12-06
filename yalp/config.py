@@ -21,18 +21,9 @@ DEFAULT_OPTS = {
     'parser_workers': 5,
     'output_workers': 1,
     'celery_advanced': {},
-    'parsers': [
-        {
-            'module': 'yalp.parsers.plain',
-            'class': 'PlainParser',
-        }
-    ],
-    'outputs': [
-        {
-            'module': 'yalp.outputs.plain',
-            'class': 'PlainOutputer',
-        },
-    ],
+    'inputs': [],
+    'parsers': [],
+    'outputs': [],
 }
 
 
