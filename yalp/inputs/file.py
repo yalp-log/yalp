@@ -3,7 +3,6 @@
 yalp.inputs.file
 ================
 '''
-from __future__ import print_function
 from . import BaseInputer
 
 
@@ -16,4 +15,9 @@ class FileInputer(BaseInputer):
         self.path = path
 
     def run(self):
-        print(self.path)
+        with open(self.path, 'r') as in_file:
+            for line in in_file.readlines():
+                event = {'message': line.strip()}
+                if self.type_:
+                    event['type'] = self.type_
+                self.enqueue_event(event)
