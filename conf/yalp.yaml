@@ -8,6 +8,12 @@
 #parser_worker_name: parser-workers
 #output_worker_name: output-workers
 
+# Input configuration
+#inputs:
+# - module: 'yalp.inputs.file'
+#   class: 'FileInputer'
+#   path: '/var/log/messages'
+
 # Parsers configuration
 #parsers:
 #  - module: 'yalp.parsers.plain'
