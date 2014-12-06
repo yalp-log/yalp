@@ -14,19 +14,25 @@ class BaseInputer(ThreadPipline):
     def __init__(self, *args, **kwargs):
         super(BaseInputer, self).__init__(*args, **kwargs)
         self.app = get_celery_app(settings)
-
-    def enqueue_event(self, event):
         from yalp.pipeline import tasks
         if settings.parsers:
-            tasks.process_message.apply_async(
-                args=[event],
-                queue=settings.parser_queue,
-            )
+            self.process_task = tasks.process_message
+            self.queue_name = settings.parser_queue
         else:
-            tasks.process_output.apply_async(
-                args=[event],
-                queue=settings.output_queue,
-            )
+            self.process_task = tasks.process_output
+            self.queue_name = settings.output_queue
+
+    def enqueue_event(self, event):
+        '''
+        Take an event and send it to the proper queue.
+
+        Send the event to the parsers queue, unless there are no parsers
+        in the config. Then send the event directly to the outputs.
+        '''
+        self.process_task.apply_async(
+            args=[event],
+            queue=self.queue_name,
+        )
 
 
 def start_inputs():
