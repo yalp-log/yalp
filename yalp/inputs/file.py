@@ -29,12 +29,26 @@ class FileInputer(BaseInputer, tailer.Tailer):
         Setup file handle seeking to last known position.
         '''
         self.file = open(self.path, 'r')
-        self.start_pos = self.file.tell()
+        self.cur_inode = os.fstat(self.file.fileno()).st_ino
         if os.path.exists(self.sincedb):
             with open(self.sincedb, 'r') as sincedb_file:
                 for line in sincedb_file.readlines():
-                    position = line.strip()
-                    self.seek(int(position))
+                    inode, position = line.strip().split()
+                    if int(inode) == self.cur_inode:
+                        self.seek(int(position))
+
+    def _cleanup(self):
+        '''
+        Cleanup file handle, record current position.
+        '''
+        self._write_sincedb()
+        self.file.close()
+
+    def _write_sincedb(self):
+        ''' Write current state to sincedb '''
+        with open(self.sincedb, 'w') as sincedb_file:
+            sincedb_file.write('{0} {1}'.format(self.cur_inode,
+                                                self.file.tell()))
 
     def stoppable_follow(self, delay=1.0):
         '''
@@ -62,16 +76,15 @@ class FileInputer(BaseInputer, tailer.Tailer):
                 yield line
             else:
                 trailing = True
-                self.seek(where)
+                if os.stat(self.path).st_ino != self.cur_inode:
+                    new_file = open(self.path, 'r')
+                    self.file.close()
+                    self.file = new_file
+                    self.cur_inode = os.fstat(self.file.fileno()).st_ino
+                    self._write_sincedb()
+                else:
+                    self.seek(where)
                 time.sleep(delay)
-
-    def _cleanup(self):
-        '''
-        Cleanup file handle, record current position.
-        '''
-        with open(self.sincedb, 'w') as sincedb_file:
-            sincedb_file.write(str(self.file.tell()))
-        self.file.close()
 
     def run(self):
         self._setup()
