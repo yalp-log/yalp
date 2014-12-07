@@ -15,18 +15,8 @@ logger = logging.getLogger(__name__)
 
 from . import version
 from .config import settings
-from .utils import get_celery_app, get_yalp_class
+from .utils import get_celery_app, get_yalp_class, get_hostname
 from .exceptions import ShutdownException
-
-
-def _get_hostname():
-    '''
-    Get system's hostname for worker process name.
-    '''
-    import socket
-    hostname = socket.gethostname()
-    del socket
-    return hostname
 
 
 class BaseEntryPoint(object):
@@ -80,7 +70,7 @@ class ParsersEntryPoint(BaseEntryPoint):
             '--concurrency={0}'.format(settings.parser_workers),
             '--queues={0}'.format(settings.parser_queue),
             '--hostname={0}-{1}'.format(
-                _get_hostname(),
+                get_hostname(),
                 settings.parser_worker_name,
             )
         ])
@@ -97,7 +87,7 @@ class OutputersEntryPoint(BaseEntryPoint):
             '--concurrency={0}'.format(settings.output_workers),
             '--queues={0}'.format(settings.output_queue),
             '--hostname={0}-{1}'.format(
-                _get_hostname(),
+                get_hostname(),
                 settings.output_worker_name,
             )
         ])

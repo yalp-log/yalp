@@ -98,3 +98,13 @@ def get_celery_app(config):
         'yalp.pipeline',
     ))
     return app
+
+
+def get_hostname():
+    '''
+    Get system's hostname for worker process name.
+    '''
+    import socket
+    hostname = socket.gethostname()
+    del socket
+    return hostname

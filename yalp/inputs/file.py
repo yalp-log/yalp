@@ -90,7 +90,5 @@ class FileInputer(BaseInputer, tailer.Tailer):
         self._setup()
         for line in self.stoppable_follow():
             event = {'message': line}
-            if self.type_:
-                event['type'] = self.type_
             self.enqueue_event(event)
         self._cleanup()
