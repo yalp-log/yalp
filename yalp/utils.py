@@ -62,14 +62,11 @@ def get_yalp_class(config, instance_type=BasePipline):
     '''
     try:
         module_name = config['module']
-        print 'module: ' + module_name
         class_name = config['class']
-        print 'class: ' + class_name
         module = __import__(module_name, fromlist=[class_name])
         class_ = getattr(module, class_name)
         if 'type' in config:
             config['type_'] = config['type']
-            print 'type: ' + config['type']
         instance = class_(**config)
         if not isinstance(instance, instance_type):
             raise ImportError
