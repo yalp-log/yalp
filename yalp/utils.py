@@ -72,7 +72,7 @@ def get_yalp_class(config, instance_type=BasePipline):
             raise ImportError
         return instance
     except KeyError:
-        raise ImproperlyConfigured('Invalid config.')
+        raise ImproperlyConfigured('Invalid config: {0}'.format(config))
     except ImportError:
         raise ImproperlyConfigured('Invalid parser module/class.')
 
