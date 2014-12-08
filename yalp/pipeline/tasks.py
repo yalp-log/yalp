@@ -6,7 +6,7 @@ yalp.pipeline.tasks
 from celery import shared_task, Task
 
 from ..config import settings
-from ..utils import get_yalp_class
+from ..utils import get_yalp_class, get_celery_app
 
 
 class PipelineTask(Task):
@@ -17,6 +17,9 @@ class PipelineTask(Task):
     _config = None
     _parsers = None
     _outputers = None
+
+    def _get_app(self):
+        return get_celery_app(self.config)
 
     @property
     def config(self):
