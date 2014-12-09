@@ -48,27 +48,6 @@ def get_yalp_class(plugin, config, plugin_type, instance_type=BasePipline):
     raise ImproperlyConfigured('Invalid parser module/class.')
 
 
-def old_get_yalp_class(config, instance_type=BasePipline):
-    '''
-    Get a yalp input/parser/output class.
-    '''
-    try:
-        module_name = config['module']
-        class_name = config['class']
-        module = __import__(module_name, fromlist=[class_name])
-        class_ = getattr(module, class_name)
-        if 'type' in config:
-            config['type_'] = config['type']
-        instance = class_(**config)
-        if not isinstance(instance, instance_type):
-            raise ImportError
-        return instance
-    except KeyError:
-        raise ImproperlyConfigured('Invalid config: {0}'.format(config))
-    except ImportError:
-        raise ImproperlyConfigured('Invalid parser module/class.')
-
-
 def get_hostname():
     '''
     Get system's hostname for worker process name.

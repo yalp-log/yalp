@@ -10,7 +10,6 @@ from ..config import settings
 from ..utils import get_yalp_class
 
 
-
 def lazy_update_app_config():
     '''
     Load settings into celery as late as possible.
