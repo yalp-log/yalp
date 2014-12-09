@@ -7,18 +7,19 @@ import os
 import hashlib
 import time
 import tailer
+from ..config import settings
 from . import BaseInputer
 
 
-class FileInputer(BaseInputer, tailer.Tailer):
+class Inputer(BaseInputer, tailer.Tailer):
     '''
     Get input from a file.
     '''
-    def __init__(self, path, type_=None, read_size=1024, *args, **kwargs):
-        super(FileInputer, self).__init__(type_, *args, **kwargs)
+    def __init__(self, path, read_size=1024, *args, **kwargs):
+        super(Inputer, self).__init__(*args, **kwargs)
         self.path = path
         self.read_size = read_size
-        self.sincedb_dir = os.environ['HOME']
+        self.sincedb_dir = settings.home or os.environ['HOME']
         self.sincedb = os.path.join(
             self.sincedb_dir,
             '.sincedb_{0}'.format(hashlib.md5(self.path).hexdigest())

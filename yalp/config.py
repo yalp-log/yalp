@@ -6,10 +6,11 @@ yalp.config
 import os
 import yaml
 
-from .utils import LazyObject
-
 import logging
 logger = logging.getLogger(__name__)
+
+
+EMPTY = object()
 
 
 DEFAULT_OPTS = {
@@ -24,6 +25,10 @@ DEFAULT_OPTS = {
     'inputs': [],
     'parsers': [],
     'outputs': [],
+    'home': None,
+    'input_packages': ['yalp.inputs'],
+    'parser_packages': ['yalp.parsers'],
+    'output_packages': ['yalp.outputs'],
 }
 
 
@@ -56,6 +61,52 @@ def load_config(path, defaults=None):
     if overrides:
         opts.update(overrides)
     return opts
+
+
+# pylint: disable=W0212
+def new_method_proxy(func):
+    ''' Proxy function call to lazy get attrs '''
+    def inner(self, *args):  # pylint: disable=C0111
+        if self._wrapped is EMPTY:
+            self._setup()
+        return func(self._wrapped, *args)
+    return inner
+# pylint: enable=W0212
+
+
+class LazyObject(object):
+    '''
+    Wrapper for another class to delay instantiation.
+    '''
+    _wrapped = None
+
+    def __init__(self):
+        self._wrapped = EMPTY
+
+    __getattr__ = new_method_proxy(getattr)
+
+    def __setattr__(self, name, value):
+        if name == '_wrapped':
+            self.__dict__['_wrapped'] = value
+        else:
+            if self._wrapped is EMPTY:
+                self._setup()
+            setattr(self._wrapped, name, value)
+
+    def __delattr__(self, name):
+        if name == '_wrapped':
+            raise TypeError('can\'t delete _wrapped.')
+        if self._wrapped is EMPTY:
+            self._setup()
+        delattr(self._wrapped, name)
+
+    def _setup(self):
+        '''
+        Must be implemented by subclasses to initialize wrapped object.
+        '''
+        raise NotImplementedError
+
+    __dir__ = new_method_proxy(dir)
 
 
 class LazySettings(LazyObject):
