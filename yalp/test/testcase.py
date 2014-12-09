@@ -6,8 +6,8 @@ yalp.test.testcase
 
 import sys
 import unittest
-from ..scripts import get_celery_app
 from ..config import settings
+from ..pipeline.tasks import app
 
 from .utils import override_settings
 
@@ -65,7 +65,7 @@ class YalpTestCase(unittest.TestCase):
         settings.celery_advanced = {
             'CELERY_ALWAYS_EAGER': True,
         }
-        self.app = get_celery_app(settings)
+        self.app = app
 
     def _post_teardown(self):
         '''

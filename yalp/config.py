@@ -24,6 +24,7 @@ DEFAULT_OPTS = {
     'inputs': [],
     'parsers': [],
     'outputs': [],
+    'home': None,
 }
 
 

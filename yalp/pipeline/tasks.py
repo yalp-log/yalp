@@ -3,10 +3,35 @@
 yalp.pipeline.tasks
 ===================
 '''
-from celery import shared_task, Task
+from __future__ import absolute_import
+from celery import Celery, Task
 
 from ..config import settings
-from ..utils import get_yalp_class, get_celery_app
+from ..utils import get_yalp_class
+
+
+
+def lazy_update_app_config():
+    '''
+    Load settings into celery as late as possible.
+    '''
+    config_updates = {
+        'BROKER_URL': settings.broker_url,
+        'CELERY_ROUTES': {
+            'yalp.pipeline.tasks.process_message': {
+                'queue': settings.parser_queue,
+            },
+            'yalp.pipeline.tasks.process_output': {
+                'queue': settings.output_queue,
+            },
+        },
+    }
+    config_updates.update(settings.celery_advanced)
+    return config_updates
+
+
+app = Celery()
+app.add_defaults(lazy_update_app_config)
 
 
 class PipelineTask(Task):
@@ -17,9 +42,6 @@ class PipelineTask(Task):
     _config = None
     _parsers = None
     _outputers = None
-
-    def _get_app(self):
-        return get_celery_app(self.config)
 
     @property
     def config(self):
@@ -51,7 +73,7 @@ class PipelineTask(Task):
         return self._outputers
 
 
-@shared_task(base=PipelineTask)
+@app.task(base=PipelineTask)
 def process_message(event):
     '''
     Process a message using settings from config.
@@ -66,7 +88,7 @@ def process_message(event):
     return parsed_events
 
 
-@shared_task(base=PipelineTask)
+@app.task(base=PipelineTask)
 def process_output(event):
     '''
     Output events

@@ -4,6 +4,7 @@ yalp.scripts
 ============
 '''
 from __future__ import print_function
+from __future__ import absolute_import
 
 import os
 import sys
@@ -15,7 +16,8 @@ logger = logging.getLogger(__name__)
 
 from . import version
 from .config import settings
-from .utils import get_celery_app, get_yalp_class, get_hostname
+from .utils import get_yalp_class, get_hostname
+from .pipeline.tasks import app
 from .exceptions import ShutdownException
 
 
@@ -56,7 +58,7 @@ class BaseEntryPoint(object):
             sys.exit(0)
         if self.options.config:
             os.environ['YALP_CONFIG_FILE'] = self.options.config
-        self.app = get_celery_app(settings)
+        self.app = app
 
 
 class ParsersEntryPoint(BaseEntryPoint):
