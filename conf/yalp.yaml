@@ -8,18 +8,26 @@
 #parser_worker_name: parser-workers
 #output_worker_name: output-workers
 
+# Plugin configuration
+#input_packages:
+#  - yalp.inputs
+#parser_packages:
+#  - yalp.parsers
+#input_packages:
+#  - yalp.outputs
+
 # Input configuration
 #inputs:
-# - module: 'yalp.inputs.file'
-#   class: 'FileInputer'
-#   path: '/var/log/messages'
+#  - 'file':
+#      path: '/var/log/messages'
 
 # Parsers configuration
 #parsers:
-#  - module: 'yalp.parsers.plain'
-#    class: 'PlainParser'
+#  - 'plain': {}
 
 # Output configuration
 #outputs:
-#  - module: 'yalp.outputs.plain'
-#    class: 'PlainOutputer'
+#  - 'mongo':
+#      uri: 'mongodb://localhost:27017/yalp'
+#      database: yalp
+#      collection: logs

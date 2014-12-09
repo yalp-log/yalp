@@ -11,12 +11,12 @@ from ..config import settings
 from . import BaseInputer
 
 
-class FileInputer(BaseInputer, tailer.Tailer):
+class Inputer(BaseInputer, tailer.Tailer):
     '''
     Get input from a file.
     '''
     def __init__(self, path, read_size=1024, *args, **kwargs):
-        super(FileInputer, self).__init__(*args, **kwargs)
+        super(Inputer, self).__init__(*args, **kwargs)
         self.path = path
         self.read_size = read_size
         self.sincedb_dir = settings.home or os.environ['HOME']

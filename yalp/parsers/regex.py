@@ -7,12 +7,12 @@ import re
 from . import BaseParser
 
 
-class RegexParser(BaseParser):
+class Parser(BaseParser):
     '''
     Process input with regex.
     '''
     def __init__(self, regex=None, *args, **kwargs):
-        super(RegexParser, self).__init__(*args, **kwargs)
+        super(Parser, self).__init__(*args, **kwargs)
         self.regex = regex
 
     def parse(self, event):

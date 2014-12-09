@@ -7,7 +7,7 @@ import pymongo
 from . import BaseOutputer
 
 
-class MongoOutputer(BaseOutputer):
+class Outputer(BaseOutputer):
     '''
     Send output to mongo.
     '''
@@ -17,7 +17,7 @@ class MongoOutputer(BaseOutputer):
                  collection,
                  *args,
                  **kwargs):
-        super(MongoOutputer, self).__init__(*args, **kwargs)
+        super(Outputer, self).__init__(*args, **kwargs)
         self.client = pymongo.MongoClient(uri)
         self.database = self.client[database]
         self.collection = self.database[collection]

@@ -106,15 +106,29 @@ class InputsEntryPoint(BaseEntryPoint):
     '''
     Entry point for starting inputers.
     '''
+    _inputers = None
+
     def __init__(self, *args, **kwargs):
         super(InputsEntryPoint, self).__init__(*args, **kwargs)
+
+    @property
+    def inputers(self):
+        '''
+        Get the list of inputer classes.
+        '''
+        if self._inputers is None:
+            inputers = []
+            for conf in settings.inputs:
+                for plugin, config in conf.items():
+                    inputers.append(get_yalp_class(plugin, config, 'input'))
+            self._inputers = inputers
+        return self._inputers
 
     def execute(self):
         super(InputsEntryPoint, self).execute()
         import signal
         signal.signal(signal.SIGTERM, sigterm_handler)
         signal.signal(signal.SIGINT, sigterm_handler)
-        self.inputers = [get_yalp_class(conf) for conf in settings.inputs]
         try:
             for inputer in self.inputers:
                 inputer.start()

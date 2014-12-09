@@ -58,8 +58,11 @@ class PipelineTask(Task):
         Get the list of parser classes.
         '''
         if self._parsers is None:
-            self._parsers = [
-                get_yalp_class(conf) for conf in self.config.parsers]
+            parsers = []
+            for conf in self.config.parsers:
+                for plugin, config in conf.items():
+                    parsers.append(get_yalp_class(plugin, config, 'parser'))
+            self._parsers = parsers
         return self._parsers
 
     @property
@@ -68,8 +71,11 @@ class PipelineTask(Task):
         Get the list of output classes.
         '''
         if self._outputers is None:
-            self._outputers = [
-                get_yalp_class(conf) for conf in self.config.outputs]
+            outputs = []
+            for conf in self.config.outputs:
+                for plugin, config in conf.items():
+                    outputs.append(get_yalp_class(plugin, config, 'output'))
+            self._outputers = outputs
         return self._outputers
 
 

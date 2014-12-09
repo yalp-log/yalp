@@ -5,57 +5,50 @@ yalp.utils
 '''
 from .pipeline import BasePipline
 from .exceptions import ImproperlyConfigured
-
-EMPTY = object()
-
-
-# pylint: disable=W0212
-def new_method_proxy(func):
-    ''' Proxy function call to lazy get attrs '''
-    def inner(self, *args):  # pylint: disable=C0111
-        if self._wrapped is EMPTY:
-            self._setup()
-        return func(self._wrapped, *args)
-    return inner
-# pylint: enable=W0212
+from .config import settings
 
 
-class LazyObject(object):
+YALP_PLUGIN_MAPPINGS = {
+    'input': {
+        'classname': 'Inputer',
+        'packages_list': 'input_packages',
+    },
+    'parser': {
+        'classname': 'Parser',
+        'packages_list': 'parser_packages',
+    },
+    'output': {
+        'classname': 'Outputer',
+        'packages_list': 'output_packages',
+    },
+}
+
+
+def get_yalp_class(plugin, config, plugin_type, instance_type=BasePipline):
     '''
-    Wrapper for another class to delay instantiation.
+    Get a yalp input/parser/output class.
     '''
-    _wrapped = None
+    class_name = YALP_PLUGIN_MAPPINGS[plugin_type]['classname']
+    package_list = getattr(
+        settings, YALP_PLUGIN_MAPPINGS[plugin_type]['packages_list'], [])
 
-    def __init__(self):
-        self._wrapped = EMPTY
-
-    __getattr__ = new_method_proxy(getattr)
-
-    def __setattr__(self, name, value):
-        if name == '_wrapped':
-            self.__dict__['_wrapped'] = value
-        else:
-            if self._wrapped is EMPTY:
-                self._setup()
-            setattr(self._wrapped, name, value)
-
-    def __delattr__(self, name):
-        if name == '_wrapped':
-            raise TypeError('can\'t delete _wrapped.')
-        if self._wrapped is EMPTY:
-            self._setup()
-        delattr(self._wrapped, name)
-
-    def _setup(self):
-        '''
-        Must be implemented by subclasses to initialize wrapped object.
-        '''
-        raise NotImplementedError
-
-    __dir__ = new_method_proxy(dir)
+    for package in package_list:
+        try:
+            module_name = '.'.join([package, plugin])
+            module = __import__(module_name, fromlist=[class_name])
+            class_ = getattr(module, class_name)
+            if 'type' in config:
+                config['type_'] = config['type']
+            instance = class_(**config)
+            if not isinstance(instance, instance_type):
+                raise ImportError
+            return instance
+        except ImportError:
+            pass
+    raise ImproperlyConfigured('Invalid parser module/class.')
 
 
-def get_yalp_class(config, instance_type=BasePipline):
+def old_get_yalp_class(config, instance_type=BasePipline):
     '''
     Get a yalp input/parser/output class.
     '''

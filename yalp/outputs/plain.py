@@ -7,12 +7,12 @@ from __future__ import print_function
 from . import BaseOutputer
 
 
-class PlainOutputer(BaseOutputer):
+class Outputer(BaseOutputer):
     '''
     Print output
     '''
     def __init__(self, *args, **kwargs):
-        super(PlainOutputer, self).__init__(*args, **kwargs)
+        super(Outputer, self).__init__(*args, **kwargs)
 
     def output(self, event):
         print(event)

@@ -7,12 +7,12 @@ import json
 from . import BaseOutputer
 
 
-class FileOutputer(BaseOutputer):
+class Outputer(BaseOutputer):
     '''
     Write output to a file.
     '''
     def __init__(self, path=None, *args, **kwargs):
-        super(FileOutputer, self).__init__(*args, **kwargs)
+        super(Outputer, self).__init__(*args, **kwargs)
         self.path = path
 
     def output(self, event):

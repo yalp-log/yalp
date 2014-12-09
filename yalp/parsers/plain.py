@@ -7,12 +7,12 @@ from __future__ import print_function
 from . import BaseParser
 
 
-class PlainParser(BaseParser):
+class Parser(BaseParser):
     '''
     Print input
     '''
     def __init__(self, *args, **kwargs):
-        super(PlainParser, self).__init__(*args, **kwargs)
+        super(Parser, self).__init__(*args, **kwargs)
 
     def parse(self, event):
         print(event)
