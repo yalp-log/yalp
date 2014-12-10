@@ -2,10 +2,50 @@
 import sys
 import os
 
+
+class Mock(object):
+    '''
+    Mock out specified imports
+
+    This allows autodoc to do it's thing without having oodles of req'd
+    installed libs. This doesn't work with ``import *`` imports.
+
+    http://read-the-docs.readthedocs.org/en/latest/faq.html#i-get-import-errors-on-libraries-that-depend-on-c-modules
+    '''
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        return Mock()
+
+    @classmethod
+    def __getattr__(self, name):
+        if name in ('__file__', '__path__'):
+            return '/dev/null'
+        else:
+            return Mock()
+
+MOCK_MODULES = [
+    'yaml',
+]
+
+for mod_name in MOCK_MODULES:
+    sys.modules[mod_name] = Mock()
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+try:
+    docs_basepath = os.path.abspath(os.path.dirname(__file__))
+except NameError:
+    docs_basepath = os.path.abspath(os.path.dirname('.'))
+
+addtl_paths = (
+    os.pardir,
+)
+
+for path in addtl_paths:
+    sys.path.insert(0, os.path.abspath(os.path.join(docs_basepath, path)))
 
 # -- General configuration ------------------------------------------------
 
@@ -31,7 +71,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'contents'
 
 # General information about the project.
 project = u'YALP'

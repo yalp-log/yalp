@@ -1,16 +1,13 @@
+:orphan:
+
+.. _contents:
+
 YALP
 ====
 
-Contents:
+Reference
+---------
 
-.. toctree::
-   :maxdepth: 2
+:doc:`Full table of contents </contents>`
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+Distributed log parsing and collection.
