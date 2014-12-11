@@ -22,7 +22,8 @@ class Inputer(BaseInputer):
         self.sincedb_dir = settings.home or os.environ['HOME']
         self.sincedb = os.path.join(
             self.sincedb_dir,
-            '.sincedb_{0}'.format(hashlib.md5(self.path).hexdigest())
+            '.sincedb_{0}'.format(
+                hashlib.md5(self.path.encode('utf-8')).hexdigest())
         )
 
     def _setup(self):
