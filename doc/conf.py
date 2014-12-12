@@ -27,6 +27,7 @@ class Mock(object):
 
 MOCK_MODULES = [
     'yaml',
+    'pymongo',
 ]
 
 for mod_name in MOCK_MODULES:
