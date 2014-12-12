@@ -1,13 +1,29 @@
-:orphan:
-
-.. _contents:
 
 YALP
 ====
 
+Distributed log parsing and collection.
+
+.. todo::
+    Description about log parser, using celery.
+
+Install and Configure
+---------------------
+
+.. todo::
+    brief install guide
+
+:doc:`Full Installation Guide </topics/install>`
+
 Reference
 ---------
 
-:doc:`Full table of contents </contents>`
+:doc:`Full Plugin Reference </ref/index>`
 
-Distributed log parsing and collection.
+
+.. toctree::
+    :hidden:
+    :glob:
+
+    topics/install
+    ref/index
