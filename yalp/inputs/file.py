@@ -2,6 +2,32 @@
 '''
 yalp.inputs.file
 ================
+
+The file inputer creates an event for each line in the file. It
+continues to follow the file much like the unix ``tail -F`` command. It
+will correctly follow the file event if the inode changes, like from
+tools like logroate. Additionally, the inputer saves its last position
+in the file so it does not reprocess lines if the service is
+stopped/restarted.
+
+
+This inputer supports the following configuration items:
+
+**path**
+    The path of the file to collect events from.
+
+*type*
+    The type of event for parsers/outputers to filter on.
+
+
+Example configuration.
+
+.. code-block:: yaml
+
+    inputs:
+      - file:
+          path: /var/log/messages
+
 '''
 import os
 import hashlib

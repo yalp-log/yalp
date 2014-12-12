@@ -1,0 +1,2 @@
+
+.. automodule:: yalp.inputs.file
