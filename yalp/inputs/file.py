@@ -6,23 +6,24 @@ yalp.inputs.file
 import os
 import hashlib
 import time
-import tailer
 from ..config import settings
 from . import BaseInputer
 
 
-class Inputer(BaseInputer, tailer.Tailer):
+class Inputer(BaseInputer):
     '''
     Get input from a file.
     '''
-    def __init__(self, path, read_size=1024, *args, **kwargs):
+    line_terminators = ('\r\n', '\n', '\r')
+
+    def __init__(self, path, *args, **kwargs):
         super(Inputer, self).__init__(*args, **kwargs)
         self.path = path
-        self.read_size = read_size
         self.sincedb_dir = settings.home or os.environ['HOME']
         self.sincedb = os.path.join(
             self.sincedb_dir,
-            '.sincedb_{0}'.format(hashlib.md5(self.path).hexdigest())
+            '.sincedb_{0}'.format(
+                hashlib.md5(self.path.encode('utf-8')).hexdigest())
         )
 
     def _setup(self):
@@ -36,7 +37,7 @@ class Inputer(BaseInputer, tailer.Tailer):
                 for line in sincedb_file.readlines():
                     inode, position = line.strip().split()
                     if int(inode) == self.cur_inode:
-                        self.seek(int(position))
+                        self.file.seek(int(position))
 
     def _cleanup(self):
         '''
@@ -51,9 +52,13 @@ class Inputer(BaseInputer, tailer.Tailer):
             sincedb_file.write('{0} {1}'.format(self.cur_inode,
                                                 self.file.tell()))
 
-    def stoppable_follow(self, delay=1.0):
+    def _follow(self, delay=1.0):
         '''
-        A tail follow that can be stopped on demand.
+        Iterator generator that returns lines as data is added to the
+        file. Iteration will stop when thread is triggered to stop.
+
+        Based on:
+        http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/157035
         '''
         trailing = True
 
@@ -84,12 +89,12 @@ class Inputer(BaseInputer, tailer.Tailer):
                     self.cur_inode = os.fstat(self.file.fileno()).st_ino
                     self._write_sincedb()
                 else:
-                    self.seek(where)
+                    self.file.seek(where)
                 time.sleep(delay)
 
     def run(self):
         self._setup()
-        for line in self.stoppable_follow():
+        for line in self._follow():
             event = {'message': line}
             self.enqueue_event(event)
         self._cleanup()
