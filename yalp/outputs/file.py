@@ -2,6 +2,26 @@
 '''
 yalp.outputs.file
 =================
+
+The file outputer writes events to a file. Each event is recorded as a
+JSON string.
+
+This outputer supports the following configuration items:
+
+**path**
+    The path of the file to write the events.
+
+*type*
+    A type filter. Only output events of this type.
+
+Example configutation.
+
+.. code-block:: yaml
+
+    outputs:
+      - file:
+          path: /var/log/all_messages
+
 '''
 import json
 from . import BaseOutputer

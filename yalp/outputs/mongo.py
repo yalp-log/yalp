@@ -2,6 +2,35 @@
 '''
 yalp.outputs.mongo
 ==================
+
+The file outputer sends events to a mongo collection. Each event is
+recorded as a new document in the collection.
+
+This outputer supports the following configuration items:
+
+**uri**
+    The mongodb connection uri. Formatted as
+    ``mongodb://[user:password@]<host>[:port]/[auth_database]``
+
+**database**
+    The database name to store the documents.
+
+**collection**
+    The collection name.
+
+*type*
+    A type filter. Only output events of this type.
+
+Example configuration.
+
+.. code-block:: yaml
+
+    outputs:
+      - mongo:
+          uri: 'mongodb://localhost:27017/yalp'
+          database: yalp
+          collection: logs
+
 '''
 import pymongo
 from . import BaseOutputer
