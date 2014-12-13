@@ -24,7 +24,7 @@ class TestMongoOutput(unittest.TestCase):
             self.database.drop_collection(self.config['collection'])
         except (ImportError, pymongo.errors.ConnectionFailure):
             from nose.plugins.skip import SkipTest
-            raise SkipTest('pymongo not installed')
+            raise SkipTest('Unable to connect to Mongo')
 
     def tearDown(self):
         self.database.drop_collection(self.config['collection'])

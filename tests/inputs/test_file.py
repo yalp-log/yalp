@@ -10,9 +10,7 @@ from yalp.inputs import file as file_inputer
 
 try:
     from unittest.mock import patch, MagicMock
-    BUILTIN = 'builtins'
 except ImportError:
-    BUILTIN = '__builtin__'
     from mock import patch, MagicMock
 
 
@@ -33,7 +31,7 @@ class TestFileInput(unittest.TestCase):
         self.inputer = file_inputer.Inputer('/dev/null')
         self.inputer.enqueue_event = MagicMock()
 
-    @patch('{0}.open'.format('yalp.inputs.file'), create=True)
+    @patch('yalp.inputs.file.open', create=True)
     def test_input_event(self, mock_open):
         mock_open.side_effect = _side_effect_function
         self.inputer.start()

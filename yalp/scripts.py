@@ -108,8 +108,10 @@ class InputsEntryPoint(BaseEntryPoint):
     '''
     _inputers = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, max_iterations=None, interval=1, *args, **kwargs):
         super(InputsEntryPoint, self).__init__(*args, **kwargs)
+        self.max_iterations = max_iterations
+        self.interval = interval
 
     @property
     def inputers(self):
@@ -124,6 +126,14 @@ class InputsEntryPoint(BaseEntryPoint):
             self._inputers = inputers
         return self._inputers
 
+    def check_iterations(self):
+        ''' Check if we should sleep again '''
+        if self.max_iterations is not None:
+            self.max_iterations -= 1
+            if self.max_iterations <= 0:
+                raise ShutdownException
+        return True
+
     def execute(self):
         super(InputsEntryPoint, self).execute()
         import signal
@@ -132,8 +142,8 @@ class InputsEntryPoint(BaseEntryPoint):
         try:
             for inputer in self.inputers:
                 inputer.start()
-            while True:
-                time.sleep(1)
+            while self.check_iterations():
+                time.sleep(self.interval)
         except ShutdownException:
             for inputer in self.inputers:
                 inputer.stop()
