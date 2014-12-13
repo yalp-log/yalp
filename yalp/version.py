@@ -8,7 +8,7 @@ Get version of yalp
 from __future__ import print_function
 
 from distutils.version import StrictVersion  # pylint: disable=E0611,F0401
-__version__ = str(StrictVersion('0.1'))
+__version__ = str(StrictVersion('0.2b'))
 del StrictVersion
 
 if __name__ == '__main__':
