@@ -25,17 +25,17 @@ class TestGetYalpClass(unittest.TestCase):
     def test_get_parser_class(self):
         ''' test getting an parser class '''
         plugin_type = 'parser'
-        plugin = 'plain'
+        plugin = 'passthrough'
         config = {}
         instance = get_yalp_class(plugin, config, plugin_type)
-        from yalp.parsers.plain import Parser
+        from yalp.parsers.passthrough import Parser
         self.assertTrue(isinstance(instance, Parser))
 
     def test_get_output_class(self):
         ''' test getting an output class '''
         plugin_type = 'output'
-        plugin = 'plain'
+        plugin = 'stdout'
         config = {}
         instance = get_yalp_class(plugin, config, plugin_type)
-        from yalp.outputs.plain import Outputer
+        from yalp.outputs.stdout import Outputer
         self.assertTrue(isinstance(instance, Outputer))

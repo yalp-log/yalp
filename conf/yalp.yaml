@@ -23,7 +23,7 @@
 
 # Parsers configuration
 #parsers:
-#  - 'plain': {}
+#  - 'passthrough': {}
 
 # Output configuration
 #outputs:
