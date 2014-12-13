@@ -17,9 +17,9 @@ except ImportError:
 
 
 def _side_effect_function(path, *args):
-    if path.startswith('mocked_path'):
+    if path.startswith('/dev/null'):
         mocked_file = MagicMock()
-        mocked_file.readline.return_value = 'test message'
+        mocked_file.readline.side_effect = ['test message\n', None]
         return mocked_file
     else:
         return MagicMock()
@@ -30,7 +30,7 @@ class TestFileInput(unittest.TestCase):
     Test the file.Inputer
     '''
     def setUp(self):
-        self.inputer = file_inputer.Inputer('mocked_path')
+        self.inputer = file_inputer.Inputer('/dev/null')
         self.inputer.enqueue_event = MagicMock()
 
     @patch('{0}.open'.format('yalp.inputs.file'), create=True)
@@ -40,7 +40,7 @@ class TestFileInput(unittest.TestCase):
         time.sleep(0.1)
         self.inputer.stop()
         self.inputer.join()
-        mock_open.assert_any_call('mocked_path', 'r')
+        mock_open.assert_any_call('/dev/null', 'r')
         self.inputer.enqueue_event.assert_called_with(
             {'message': 'test message'}
         )
