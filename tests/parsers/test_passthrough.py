@@ -1,7 +1,7 @@
 # vim: set et ts=4 sw=4 fileencoding=utf-8:
 '''
-test.test_passthrough_parser
-============================
+test.parsers.test_passthrough
+=============================
 '''
 import unittest
 from yalp.parsers import passthrough

@@ -1,7 +1,7 @@
 # vim: set et ts=4 sw=4 fileencoding=utf-8:
 '''
-test.test_regex_parser
-======================
+test.parsers.test_regex
+=======================
 '''
 import unittest
 from yalp.parsers import regex
