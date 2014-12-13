@@ -37,5 +37,4 @@ class Outputer(BaseOutputer):
 
     def output(self, event):
         with open(self.path, 'a') as outfile:
-            outfile.write(json.dumps(event))
-            outfile.write('\n')
+            outfile.write(json.dumps(event) + '\n')
