@@ -50,13 +50,13 @@ class ThreadPipline(BasePipline, threading.Thread):
     '''
     def __init__(self, *args, **kwargs):
         super(ThreadPipline, self).__init__(*args, **kwargs)
-        self._stop = threading.Event()
+        self._stopper = threading.Event()
 
     def stop(self):
         ''' Inform the thread to stop '''
-        self._stop.set()
+        self._stopper.set()
 
     @property
     def stopped(self):
         ''' True if thread has been told to stop '''
-        return self._stop.is_set()
+        return self._stopper.is_set()

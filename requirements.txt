@@ -1,3 +1,4 @@
 PyYAML==3.11
 celery==3.1.17
 pymongo==2.7.2
+mock==1.0.1
