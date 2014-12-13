@@ -54,4 +54,4 @@ class TestInputEntryPoint(unittest.TestCase):
         entrypoint.execute()
         message = self.channel.basic_get(queue='outputs')
         self.assertIsNotNone(message)
-        self.assertIn('test message', message.body)
+        self.assertTrue('test message' in str(message.body))
