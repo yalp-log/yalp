@@ -4,6 +4,9 @@ yalp.outputs.stdout
 ===================
 '''
 from __future__ import print_function
+
+import sys
+import json
 from . import BaseOutputer
 
 
@@ -11,8 +14,9 @@ class Outputer(BaseOutputer):
     '''
     Print output
     '''
-    def __init__(self, *args, **kwargs):
+    def __init__(self, out=sys.stdout, *args, **kwargs):
         super(Outputer, self).__init__(*args, **kwargs)
+        self.out = out
 
     def output(self, event):
-        print(event)
+        self.out.write(json.dumps(event))
