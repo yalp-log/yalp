@@ -3,8 +3,8 @@
 yalp.outputs.mongo
 ==================
 
-The file outputer sends events to a mongo collection. Each event is
-recorded as a new document in the collection.
+The mongo outputer sends events to a mongo collection. Each event
+is recorded as a new document in the collection.
 
 This outputer supports the following configuration items:
 
