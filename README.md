@@ -7,3 +7,5 @@ YALP
 [![PyPi version](https://pypip.in/v/yalp/badge.png)](https://pypi.python.org/pypi/yalp)
 
 Distributed log parsing and collection.
+
+Latest [documentation](http://yalp.readthedocs.org).
