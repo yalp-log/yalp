@@ -48,6 +48,7 @@ addtl_paths = (
 for path in addtl_paths:
     sys.path.insert(0, os.path.abspath(os.path.join(docs_basepath, path)))
 
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -62,6 +63,8 @@ extensions = [
     'sphinx.ext.viewcode',
 ]
 
+todo_include_todos = not on_rtd
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -72,7 +75,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'contents'
+master_doc = 'index'
 
 # General information about the project.
 project = u'YALP'

@@ -13,7 +13,7 @@
 #  - yalp.inputs
 #parser_packages:
 #  - yalp.parsers
-#input_packages:
+#output_packages:
 #  - yalp.outputs
 
 # Input configuration
