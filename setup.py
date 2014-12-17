@@ -50,7 +50,13 @@ SETUP_KWARGS = {
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: POSIX :: Linux',
     ],
-    'packages': ['yalp'],
+    'packages': [
+        'yalp',
+        'yalp.inputs',
+        'yalp.outputs',
+        'yalp.parsers',
+        'yalp.pipeline',
+    ],
     'package_data': {},
     'data_files': [],
     'scripts': [
