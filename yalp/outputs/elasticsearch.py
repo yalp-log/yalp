@@ -51,7 +51,7 @@ class Outputer(BaseOutputer):
                  *args,
                  **kwargs):
         super(Outputer, self).__init__(*args, **kwargs)
-        self.es = Elasticsearch([uri])
+        self.es = Elasticsearch([uri])  # pylint: disable=C0103
         self.index = index
         self.doc_type = doc_type
         self.es.indices.create(index=self.index, ignore=400)
