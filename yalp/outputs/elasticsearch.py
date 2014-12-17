@@ -33,7 +33,10 @@ Example configuration.
 '''
 from __future__ import absolute_import
 
-from elasticsearch import Elasticsearch
+try:
+    from elasticsearch import Elasticsearch
+except ImportError:
+    pass
 from . import BaseOutputer
 
 
