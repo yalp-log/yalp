@@ -23,6 +23,7 @@ class TestElasticsearchOutput(unittest.TestCase):
             self.index = self.config['index']
             self.doc_type = self.config['doc_type']
             self.es.indices.delete('*')
+            self.es.indices.create(index=self.index, ignore=400)
         except (ImportError, es_dep.ConnectionError):
             from nose.plugins.skip import SkipTest
             raise SkipTest('Unable to connect to Elasticsearch')
@@ -41,7 +42,7 @@ class TestElasticsearchOutput(unittest.TestCase):
             doc_type=self.config['doc_type']
         )
         outputer.run(event)
-        count = self.es.count(self.index, self.doc_type)
+        count = self.es.count(self.index, self.doc_type).get('count')
         self.assertEqual(count, 1)
 
     def test_output_event_skip_on_type(self):
@@ -56,5 +57,5 @@ class TestElasticsearchOutput(unittest.TestCase):
             doc_type=self.config['doc_type']
         )
         outputer.run(event)
-        count = self.es.count(self.index, self.doc_type)
+        count = self.es.count(self.index, self.doc_type).get('count')
         self.assertEqual(count, 0)
