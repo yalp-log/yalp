@@ -58,3 +58,4 @@ class Outputer(BaseOutputer):
 
     def output(self, event):
         self.es.create(index=self.index, doc_type=self.doc_type, body=event)
+        self.es.indices.flush(self.index)
