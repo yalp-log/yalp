@@ -57,9 +57,10 @@ class YalpOutputersConsumer(bootsteps.ConsumerStep):
             outputer.run(body['message'])
         message.ack()
 
-    def shutdown(self, parent):
+    def shutdown(self, c):
         for outputer in self.outputers:
             outputer.shutdown()
+        super(YalpOutputersConsumer, self).shutdown(c)
 
 
 def lazy_update_app_config():
