@@ -32,18 +32,6 @@ class TestPipelineTaskProperties(unittest.TestCase):
         for parser in parsers:
             self.assertIsInstance(parser, Parser)
 
-    def test_outputers_property(self):
-        ''' test getting outputers via property '''
-        settings.outputs = [{
-            'stdout': {}
-        }]
-        task = PipelineTask()
-        outputs = task.outputers
-        from yalp.outputs.stdout import Outputer
-        self.assertEqual(len(outputs), 1)
-        for output in outputs:
-            self.assertIsInstance(output, Outputer)
-
     def test_multi_parsers(self):
         ''' test getting multiple parsers via property '''
         settings.parsers = [
@@ -63,23 +51,3 @@ class TestPipelineTaskProperties(unittest.TestCase):
         from yalp.parsers.regex import Parser as RegexParser
         self.assertIsInstance(parsers[0], PassthroughParser)
         self.assertIsInstance(parsers[1], RegexParser)
-
-    def test_multi_outputers(self):
-        ''' test getting multiple outputers via property '''
-        settings.outputs = [
-            {
-                'stdout': {}
-            },
-            {
-                'file': {
-                    'path': '/dev/null',
-                }
-            },
-        ]
-        task = PipelineTask()
-        outputers = task.outputers
-        self.assertEqual(len(outputers), 2)
-        from yalp.outputs.stdout import Outputer as StdoutOutputer
-        from yalp.outputs.file import Outputer as FileOutputer
-        self.assertIsInstance(outputers[0], StdoutOutputer)
-        self.assertIsInstance(outputers[1], FileOutputer)
