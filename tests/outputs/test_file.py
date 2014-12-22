@@ -28,6 +28,7 @@ class TestFileOutput(unittest.TestCase):
         }
         outputer = file_outputer.Outputer()
         outputer.run(event)
+        outputer.shutdown()
         file_handle = mock_open.return_value
         file_handle.write.assert_called_with(json.dumps(event) + '\n')
 
@@ -40,5 +41,6 @@ class TestFileOutput(unittest.TestCase):
         }
         outputer = file_outputer.Outputer()
         outputer.run(event)
+        outputer.shutdown()
         file_handle = mock_open.return_value
         self.assertFalse(file_handle.write.called)
