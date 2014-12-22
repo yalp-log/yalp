@@ -9,4 +9,6 @@ dist
 nosetests.xml
 coverage.xml
 /*.yaml
+/*.yal
+/*.log
 _build/

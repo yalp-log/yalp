@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 from . import version
 from .config import settings
 from .utils import get_yalp_class, get_hostname
-from .pipeline.tasks import app
+from .pipeline.tasks import app, YalpOutputersConsumer
 from .exceptions import ShutdownException
 
 
@@ -84,10 +84,10 @@ class OutputersEntryPoint(BaseEntryPoint):
     '''
     def execute(self):
         super(OutputersEntryPoint, self).execute()
+        self.app.steps['consumer'].add(YalpOutputersConsumer)
         self.app.worker_main([
             'yalp-outputers',
-            '--concurrency={0}'.format(settings.output_workers),
-            '--queues={0}'.format(settings.output_queue),
+            '--pool=solo',
             '--hostname={0}-{1}'.format(
                 get_hostname(),
                 settings.output_worker_name,
@@ -177,4 +177,4 @@ class CliEntryPoint(BaseEntryPoint):
         if settings.parsers:
             tasks.process_message.delay(event)
         else:
-            tasks.process_output.delay(event)
+            tasks.process_output(event)

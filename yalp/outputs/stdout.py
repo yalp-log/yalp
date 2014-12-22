@@ -20,3 +20,6 @@ class Outputer(BaseOutputer):
 
     def output(self, event):
         self.out.write(json.dumps(event))
+
+    def shutdown(self):
+        pass
