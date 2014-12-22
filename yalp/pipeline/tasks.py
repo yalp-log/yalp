@@ -52,7 +52,6 @@ class YalpOutputersConsumer(bootsteps.ConsumerStep):
         '''
         Process the message.
         '''
-        print '{0!r}'.format(body)
         for outputer in self.outputers:
             outputer.run(body['message'])
         message.ack()
