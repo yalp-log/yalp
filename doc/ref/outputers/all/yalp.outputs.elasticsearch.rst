@@ -1,0 +1,2 @@
+
+.. automodule:: yalp.outputs.elasticsearch

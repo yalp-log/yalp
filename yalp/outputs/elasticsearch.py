@@ -5,6 +5,8 @@ yalp.outputs.elasticsearch
 
 The elasticsearch outputer sends events to an elasticsearch index.
 
+.. warning:: This requires the pyelasticsearch_ pacakge to be installed.
+
 This outputer supports the following configuration items:
 
 **uri**
@@ -30,6 +32,7 @@ Example configuration.
           index: yalp
           doc_type: logs
 
+.. _pyelasticsearch: https://pypi.python.org/pypi/pyelasticsearch/
 '''
 from __future__ import absolute_import
 

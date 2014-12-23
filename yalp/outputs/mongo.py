@@ -6,6 +6,8 @@ yalp.outputs.mongo
 The mongo outputer sends events to a mongo collection. Each event
 is recorded as a new document in the collection.
 
+.. warning:: This requires the pymongo_ pacakge to be installed.
+
 This outputer supports the following configuration items:
 
 **uri**
@@ -31,6 +33,7 @@ Example configuration.
           database: yalp
           collection: logs
 
+.. _pymongo: https://pypi.python.org/pypi/pymongo/
 '''
 try:
     import pymongo
