@@ -14,13 +14,6 @@ class BaseInputer(ThreadPipline):
     def __init__(self, *args, **kwargs):
         super(BaseInputer, self).__init__(*args, **kwargs)
         self.hostname = get_hostname()
-        from yalp.pipeline import tasks
-        if settings.parsers:
-            self.process_task = tasks.process_message
-            self.queue_name = settings.parser_queue
-        else:
-            self.process_task = tasks.process_output
-            self.queue_name = settings.output_queue
 
     def enqueue_event(self, event):
         '''
@@ -32,7 +25,11 @@ class BaseInputer(ThreadPipline):
         if self.type_:
             event['type'] = self.type_
         event['hostname'] = self.hostname
-        self.process_task.apply_async(
-            args=[event],
-            queue=self.queue_name,
-        )
+        from yalp.pipeline import tasks
+        if settings.parsers:
+            tasks.process_message.apply_async(
+                args=[event],
+                queue=settings.parser_queue,
+            )
+        else:
+            tasks.process_output(event)

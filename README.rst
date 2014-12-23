@@ -5,7 +5,7 @@ YALP
 
 Distributed log parsing and collection.
 
-.. |build-status| image:: http://img.shields.io/travis/yalp-log/yalp.svg?style=flat&branch=master
+.. |build-status| image:: http://img.shields.io/travis/yalp-log/yalp/master.svg?style=flat
     :alt: Build Status
     :scale: 100%
     :target: https://travis-ci.org/yalp-log/yalp

@@ -4,10 +4,62 @@ yalp.pipeline.tasks
 ===================
 '''
 from __future__ import absolute_import
-from celery import Celery, Task
+from celery import Celery, Task, bootsteps, uuid
+from kombu import Consumer, Exchange, Queue
 
 from ..config import settings
 from ..utils import get_yalp_class
+
+
+class YalpOutputersConsumer(bootsteps.ConsumerStep):
+    '''
+    Yalp outputer consumer
+    '''
+    _config = None
+    _outputers = None
+
+    @property
+    def config(self):
+        '''
+        Get the configuration.
+        '''
+        if self._config is None:
+            self._config = settings
+        return self._config
+
+    @property
+    def outputers(self):
+        '''
+        Get the list of output classes.
+        '''
+        if self._outputers is None:
+            outputs = []
+            for conf in self.config.outputs:
+                for plugin, config in conf.items():
+                    outputs.append(get_yalp_class(plugin, config, 'output'))
+            self._outputers = outputs
+        return self._outputers
+
+    def get_consumers(self, channel):
+        return [Consumer(channel,
+                         queues=[Queue(settings.output_queue,
+                                       Exchange(settings.output_queue),
+                                       settings.output_queue)],
+                         callbacks=[self.handle_message],
+                         accept=['json'])]
+
+    def handle_message(self, body, message):
+        '''
+        Process the message.
+        '''
+        for outputer in self.outputers:
+            outputer.run(body['message'])
+        message.ack()
+
+    def shutdown(self, c):
+        for outputer in self.outputers:
+            outputer.shutdown()
+        super(YalpOutputersConsumer, self).shutdown(c)
 
 
 def lazy_update_app_config():
@@ -19,9 +71,6 @@ def lazy_update_app_config():
         'CELERY_ROUTES': {
             'yalp.pipeline.tasks.process_message': {
                 'queue': settings.parser_queue,
-            },
-            'yalp.pipeline.tasks.process_output': {
-                'queue': settings.output_queue,
             },
         },
     }
@@ -41,6 +90,8 @@ class PipelineTask(Task):
     _config = None
     _parsers = None
     _outputers = None
+    _output_queue = None
+    _output_exchange = None
 
     @property
     def config(self):
@@ -64,18 +115,28 @@ class PipelineTask(Task):
             self._parsers = parsers
         return self._parsers
 
-    @property
-    def outputers(self):
-        '''
-        Get the list of output classes.
-        '''
-        if self._outputers is None:
-            outputs = []
-            for conf in self.config.outputs:
-                for plugin, config in conf.items():
-                    outputs.append(get_yalp_class(plugin, config, 'output'))
-            self._outputers = outputs
-        return self._outputers
+
+def process_output(event):
+    '''
+    Send the event to the output consumer.
+    '''
+    exchange = Exchange(settings.output_queue)
+    queue = Queue(settings.output_queue,
+                  exchange,
+                  settings.output_queue)
+    with app.producer_or_acquire(None) as producer:
+        producer.publish(
+            {
+                'task': 'yalp.pipeline.process_output',
+                'id': uuid(),
+                'message': event
+            },
+            serializer='json',
+            exchange=exchange,
+            routing_key=settings.output_queue,
+            declare=[queue],
+            retry=True,
+        )
 
 
 @app.task(base=PipelineTask)
@@ -89,13 +150,5 @@ def process_message(event):
     parsed_events = [parser.run(event) for parser in process_message.parsers]
     for parsed_event in parsed_events:
         if parsed_event:
-            process_output.delay(parsed_event)
+            process_output(event)
     return parsed_events
-
-
-@app.task(base=PipelineTask)
-def process_output(event):
-    '''
-    Output events
-    '''
-    return [outputer.run(event) for outputer in process_output.outputers]

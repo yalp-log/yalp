@@ -1,0 +1,5 @@
+[report]
+omit =
+    yalp/test/*
+exclude_lines =
+    raise NotImplemented

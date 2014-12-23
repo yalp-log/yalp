@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 from . import version
 from .config import settings
 from .utils import get_yalp_class, get_hostname
-from .pipeline.tasks import app
+from .pipeline.tasks import app, YalpOutputersConsumer
 from .exceptions import ShutdownException
 
 
@@ -84,10 +84,10 @@ class OutputersEntryPoint(BaseEntryPoint):
     '''
     def execute(self):
         super(OutputersEntryPoint, self).execute()
+        self.app.steps['consumer'].add(YalpOutputersConsumer)
         self.app.worker_main([
             'yalp-outputers',
-            '--concurrency={0}'.format(settings.output_workers),
-            '--queues={0}'.format(settings.output_queue),
+            '--pool=solo',
             '--hostname={0}-{1}'.format(
                 get_hostname(),
                 settings.output_worker_name,
@@ -149,32 +149,3 @@ class InputsEntryPoint(BaseEntryPoint):
                 inputer.stop()
             for inputer in self.inputers:
                 inputer.join()
-
-
-class CliEntryPoint(BaseEntryPoint):
-    '''
-    Entry point for cli.
-    '''
-    def add_arguments(self):
-        super(CliEntryPoint, self).add_arguments()
-        self.parser.add_argument('-t', '--type',
-                                 default=None,
-                                 help='Specify message type')
-        self.parser.add_argument('message',
-                                 metavar='message',
-                                 type=str,
-                                 nargs='?',
-                                 default='test message',
-                                 help='Message to process')
-
-    def execute(self):
-        super(CliEntryPoint, self).execute()
-        event = {
-            'message': self.options.message,
-            'type': self.options.type,
-        }
-        from yalp.pipeline import tasks
-        if settings.parsers:
-            tasks.process_message.delay(event)
-        else:
-            tasks.process_output.delay(event)
