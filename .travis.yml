@@ -3,6 +3,7 @@ python: 2.7
 services:
   - rabbitmq
   - mongodb
+  - elasticsearch
 env:
   - TOX_ENV=py27
   - TOX_ENV=py34

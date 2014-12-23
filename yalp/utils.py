@@ -43,7 +43,7 @@ def get_yalp_class(plugin, config, plugin_type, instance_type=BasePipline):
             if not isinstance(instance, instance_type):
                 raise ImportError
             return instance
-        except ImportError:
+        except (ImportError, NameError):
             pass
     raise ImproperlyConfigured('Invalid parser module/class.')
 

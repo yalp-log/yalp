@@ -32,7 +32,10 @@ Example configuration.
           collection: logs
 
 '''
-import pymongo
+try:
+    import pymongo
+except ImportError:  # pragma: no cover
+    pass
 from . import BaseOutputer
 
 
