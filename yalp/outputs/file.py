@@ -34,7 +34,11 @@ class Outputer(BaseOutputer):
     def __init__(self, path=None, *args, **kwargs):
         super(Outputer, self).__init__(*args, **kwargs)
         self.path = path
+        self.outfile = open(self.path, 'a')
 
     def output(self, event):
-        with open(self.path, 'a') as outfile:
-            outfile.write(json.dumps(event) + '\n')
+        self.outfile.write(json.dumps(event) + '\n')
+
+    def shutdown(self):
+        self.outfile.flush()
+        self.outfile.close()

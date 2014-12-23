@@ -25,6 +25,7 @@ class TestStdoutOutput(unittest.TestCase):
         out = StringIO()
         outputer = stdout.Outputer(out=out)
         outputer.run(event)
+        outputer.shutdown()
         output = out.getvalue().strip()
         self.assertEqual(output, json.dumps(event))
 
@@ -37,5 +38,6 @@ class TestStdoutOutput(unittest.TestCase):
         out = StringIO()
         outputer = stdout.Outputer(out=out)
         outputer.run(event)
+        outputer.shutdown()
         output = out.getvalue().strip()
         self.assertEqual(output, '')

@@ -43,6 +43,7 @@ class TestMongoOutput(unittest.TestCase):
         outputer.run(event)
         collection = self.database[self.config['collection']]
         outputs = collection.find()
+        outputer.shutdown()
         self.assertEqual(outputs.count(), 1)
         self.assertEqual(outputs[0], event)
 
@@ -58,6 +59,7 @@ class TestMongoOutput(unittest.TestCase):
             collection=self.config['collection']
         )
         outputer.run(event)
+        outputer.shutdown()
         collection = self.database[self.config['collection']]
         outputs = collection.find()
         self.assertEqual(outputs.count(), 0)

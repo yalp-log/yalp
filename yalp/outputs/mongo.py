@@ -53,3 +53,7 @@ class Outputer(BaseOutputer):
 
     def output(self, event):
         self.collection.insert(event)
+
+    def shutdown(self):
+        self.client.fsync()
+        self.client.close()

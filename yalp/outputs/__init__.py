@@ -24,3 +24,9 @@ class BaseOutputer(CeleryPipeline):
         Output the event.
         '''
         raise NotImplementedError
+
+    def shutdown(self):
+        '''
+        Shutdown the outputer, closing resources.
+        '''
+        raise NotImplementedError

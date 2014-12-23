@@ -28,7 +28,8 @@ class TestFileOutput(unittest.TestCase):
         }
         outputer = file_outputer.Outputer()
         outputer.run(event)
-        file_handle = mock_open.return_value.__enter__.return_value
+        outputer.shutdown()
+        file_handle = mock_open.return_value
         file_handle.write.assert_called_with(json.dumps(event) + '\n')
 
     @patch('{0}.open'.format(BUILTIN), create=True)
@@ -40,5 +41,6 @@ class TestFileOutput(unittest.TestCase):
         }
         outputer = file_outputer.Outputer()
         outputer.run(event)
-        file_handle = mock_open.return_value.__enter__.return_value
+        outputer.shutdown()
+        file_handle = mock_open.return_value
         self.assertFalse(file_handle.write.called)
