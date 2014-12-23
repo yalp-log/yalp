@@ -5,7 +5,7 @@ Setup script for yalp
 '''
 
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 # Ensure we are in yalp source dir
 SETUP_DIRNAME = os.path.dirname(__file__)
@@ -50,14 +50,9 @@ SETUP_KWARGS = {
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: POSIX :: Linux',
     ],
-    'packages': [
-        'yalp',
-        'yalp.inputs',
-        'yalp.outputs',
-        'yalp.parsers',
-        'yalp.pipeline',
-        'yalp.test',
-    ],
+    'packages': find_packages(exclude=[
+        '*.tests*', '*.tests.*', 'tests.*', 'tests',
+    ]),
     'package_data': {},
     'data_files': [],
     'scripts': [
