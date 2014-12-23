@@ -82,9 +82,12 @@ class OutputersEntryPoint(BaseEntryPoint):
     '''
     Entry point for starting outputers workers.
     '''
+    def __init__(self, *args, **kwargs):  # pylint: disable=W0613
+        super(OutputersEntryPoint, self).__init__(*args, **kwargs)
+        self.app.steps['consumer'].add(YalpOutputersConsumer)
+
     def execute(self):
         super(OutputersEntryPoint, self).execute()
-        self.app.steps['consumer'].add(YalpOutputersConsumer)
         self.app.worker_main([
             'yalp-outputers',
             '--pool=solo',
