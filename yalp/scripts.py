@@ -152,32 +152,3 @@ class InputsEntryPoint(BaseEntryPoint):
                 inputer.stop()
             for inputer in self.inputers:
                 inputer.join()
-
-
-class CliEntryPoint(BaseEntryPoint):
-    '''
-    Entry point for cli.
-    '''
-    def add_arguments(self):
-        super(CliEntryPoint, self).add_arguments()
-        self.parser.add_argument('-t', '--type',
-                                 default=None,
-                                 help='Specify message type')
-        self.parser.add_argument('message',
-                                 metavar='message',
-                                 type=str,
-                                 nargs='?',
-                                 default='test message',
-                                 help='Message to process')
-
-    def execute(self):
-        super(CliEntryPoint, self).execute()
-        event = {
-            'message': self.options.message,
-            'type': self.options.type,
-        }
-        from yalp.pipeline import tasks
-        if settings.parsers:
-            tasks.process_message.delay(event)
-        else:
-            tasks.process_output(event)
