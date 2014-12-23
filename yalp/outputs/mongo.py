@@ -34,7 +34,7 @@ Example configuration.
 '''
 try:
     import pymongo
-except ImportError:
+except ImportError:  # pragma: no cover
     pass
 from . import BaseOutputer
 

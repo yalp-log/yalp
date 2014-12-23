@@ -19,12 +19,15 @@ class TestElasticsearchOutput(unittest.TestCase):
         }
         try:
             import elasticsearch as es_dep
-            self.es = es_dep.Elasticsearch(self.config['uri'])
-            self.index = self.config['index']
-            self.doc_type = self.config['doc_type']
-            self.es.indices.delete('*')
-            self.es.indices.create(index=self.index, ignore=400)
-        except (ImportError, es_dep.ConnectionError):
+            try:
+                self.es = es_dep.Elasticsearch(self.config['uri'])
+                self.index = self.config['index']
+                self.doc_type = self.config['doc_type']
+                self.es.indices.delete('*')
+                self.es.indices.create(index=self.index, ignore=400)
+            except es_dep.ConnectionError:
+                raise ImportError
+        except ImportError:
             from nose.plugins.skip import SkipTest
             raise SkipTest('Unable to connect to Elasticsearch')
 

@@ -35,7 +35,7 @@ from __future__ import absolute_import
 
 try:
     from elasticsearch import Elasticsearch
-except ImportError:
+except ImportError:  # pragma: no cover
     pass
 from . import BaseOutputer
 
