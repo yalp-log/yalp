@@ -7,3 +7,4 @@ Outputers
 
     yalp.outputs.file
     yalp.outputs.mongo
+    yalp.outputs.elasticsearch
