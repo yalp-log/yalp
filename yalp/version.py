@@ -11,5 +11,5 @@ from distutils.version import StrictVersion  # pylint: disable=E0611,F0401
 __version__ = str(StrictVersion('0.2'))
 del StrictVersion
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     print(__version__)
