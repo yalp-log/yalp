@@ -42,6 +42,7 @@ class TestElasticsearchOutput(unittest.TestCase):
             doc_type=self.config['doc_type']
         )
         outputer.run(event)
+        outputer.shutdown()
         count = self.es.count(self.index, self.doc_type).get('count')
         self.assertEqual(count, 1)
 
@@ -57,5 +58,6 @@ class TestElasticsearchOutput(unittest.TestCase):
             doc_type=self.config['doc_type']
         )
         outputer.run(event)
+        outputer.shutdown()
         count = self.es.count(self.index, self.doc_type).get('count')
         self.assertEqual(count, 0)
