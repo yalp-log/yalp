@@ -1,6 +1,12 @@
 Outputers
 =========
 
+Outputers record an event to persistant storage, such as a database or file.
+
+
+Full List of Outpuers
+---------------------
+
 .. currentmodule:: yalp.outputs
 
 .. toctree::

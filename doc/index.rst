@@ -58,8 +58,8 @@ Reference
     :glob:
 
     topics/install
-    topics/plugins
     ref/index
+    topics/plugins
 
 
 .. _Celery: http://www.celeryproject.org/

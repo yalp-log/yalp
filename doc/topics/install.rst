@@ -4,7 +4,7 @@ Install Guide
 YALP is designed to be installed on multiple servers, with different
 components running on separate machines. It can just as easily be installed on
 a single machine. This guide will show how to setup all components on a single
-host, but will also describe how the components could easily be distrubuted.
+host, but will also describe how the components could easily be distributed.
 
 
 Celery Broker
