@@ -56,6 +56,7 @@ SETUP_KWARGS = {
         'yalp.outputs',
         'yalp.parsers',
         'yalp.pipeline',
+        'yalp.test',
     ],
     'package_data': {},
     'data_files': [],
