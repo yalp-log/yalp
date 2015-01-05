@@ -1,4 +1,4 @@
-flake8==2.2.5
+flake8==2.3.0
 pylint==1.4.0
 nosexcover==1.0.10
 mock==1.0.1
