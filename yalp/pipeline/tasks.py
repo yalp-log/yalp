@@ -41,12 +41,15 @@ class YalpOutputersConsumer(bootsteps.ConsumerStep):
         return self._outputers
 
     def get_consumers(self, channel):
-        return [Consumer(channel,
-                         queues=[Queue(settings.output_queue,
-                                       Exchange(settings.output_queue),
-                                       settings.output_queue)],
-                         callbacks=[self.handle_message],
-                         accept=['json'])]
+        return [
+            Consumer(
+                channel,
+                queues=[Queue(settings.output_queue,
+                              Exchange(settings.output_queue),
+                              settings.output_queue)],
+                callbacks=[self.handle_message],
+            )
+        ]
 
     def handle_message(self, body, message):
         '''
@@ -131,7 +134,6 @@ def process_output(event):
                 'id': uuid(),
                 'message': event
             },
-            serializer='json',
             exchange=exchange,
             routing_key=settings.output_queue,
             declare=[queue],
