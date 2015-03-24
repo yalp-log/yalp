@@ -87,7 +87,7 @@ class OutputersEntryPoint(BaseEntryPoint):
         self.app.steps['consumer'].add(YalpOutputersConsumer)
         self.app.worker_main([
             'yalp-outputers',
-            '--pool=solo',
+            '--concurrency={0}'.format(settings.output_workers),
             '--hostname={0}-{1}'.format(
                 get_hostname(),
                 settings.output_worker_name,
