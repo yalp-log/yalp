@@ -60,6 +60,7 @@ Reference
     topics/install
     ref/index
     topics/plugins
+    topics/scaling
 
 
 .. _Celery: http://www.celeryproject.org/
