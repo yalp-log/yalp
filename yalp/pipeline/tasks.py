@@ -95,7 +95,6 @@ class PipelineTask(Task):
     _outputers = None
     _output_queue = None
     _output_exchange = None
-    _request_stack = None
 
     @property
     def config(self):
@@ -118,14 +117,6 @@ class PipelineTask(Task):
                     parsers.append(get_yalp_class(plugin, config, 'parser'))
             self._parsers = parsers
         return self._parsers
-
-    @property
-    def request_stack(self):
-        ''' Override request stack '''
-        if self._request_stack is None:
-            from celery.utils.threads import LocalStack
-            self._request_stack = LocalStack()
-        return self._request_stack
 
 
 def process_output(event):

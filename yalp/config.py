@@ -54,6 +54,7 @@ DEFAULT_OPTS = {
     'input_packages': ['yalp.inputs'],
     'parser_packages': ['yalp.parsers'],
     'output_packages': ['yalp.outputs'],
+    'logging': None,
 }
 
 
@@ -145,7 +146,7 @@ class LazySettings(LazyObject):
     def _configure_logging(self):
         ''' Configure logger from settings '''
         dictConfig(DEFAULT_LOGGING)
-        if self.LOGGING:
+        if self.logging:
             dictConfig(self.logging)
 
 
