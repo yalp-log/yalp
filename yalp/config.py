@@ -3,15 +3,40 @@
 yalp.config
 ===========
 '''
+from __future__ import print_function
+
 import os
 import yaml
 
-import logging
-logger = logging.getLogger(__name__)
+from logging.config import dictConfig
 
 
 EMPTY = object()
 
+DEFAULT_LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(processName)s: %(levelname)s [%(name)s:%(lineno)s] %(message)s',  # pylint: disable=C0301
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'yalp': {
+            'handlers': ['console'],
+        },
+        'py.warnings': {
+            'handlers': ['console'],
+        },
+    }
+}
 
 DEFAULT_OPTS = {
     'broker_url': 'amqp://guest:guest@localhost:5672//',
@@ -43,8 +68,7 @@ def _read_conf_file(path):
         try:
             conf_opts = yaml.safe_load(conf_file.read()) or {}
         except yaml.YAMLError as err:
-            logger.error(
-                'Error parsing configuration file: %s - %s', path, err)
+            print('Error parsing configuration file: %s - %s' % (path, err))
             conf_opts = {}
         return conf_opts
 
@@ -116,6 +140,13 @@ class LazySettings(LazyObject):
     def _setup(self):
         settings_file = os.environ.get('YALP_CONFIG_FILE', None)
         self._wrapped = Settings(settings_file)
+        self._configure_logging()
+
+    def _configure_logging(self):
+        ''' Configure logger from settings '''
+        dictConfig(DEFAULT_LOGGING)
+        if self.LOGGING:
+            dictConfig(self.logging)
 
 
 class Settings(object):

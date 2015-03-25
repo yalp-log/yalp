@@ -35,6 +35,9 @@ import time
 from ..config import settings
 from . import BaseInputer
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class Inputer(BaseInputer):
     '''
@@ -122,5 +125,6 @@ class Inputer(BaseInputer):
         self._setup()
         for line in self._follow():
             event = {'message': line}
+            logger.info('enqueueing msg: %s', event)
             self.enqueue_event(event)
         self._cleanup()
