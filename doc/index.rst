@@ -1,4 +1,3 @@
-
 YALP
 ====
 
@@ -58,6 +57,7 @@ Reference
     :glob:
 
     topics/install
+    topics/logging
     ref/index
     topics/plugins
     topics/scaling

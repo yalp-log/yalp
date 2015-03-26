@@ -3,10 +3,8 @@
 yalp.parsers
 ============
 '''
-from ..pipeline import CeleryPipeline
-
 import logging
-logger = logging.getLogger(__name__)
+from ..pipeline import CeleryPipeline
 
 
 class BaseParser(CeleryPipeline):
@@ -15,6 +13,7 @@ class BaseParser(CeleryPipeline):
     '''
     def __init__(self, *args, **kwargs):
         super(BaseParser, self).__init__(*args, **kwargs)
+        self.logger = logging.getLogger(__name__)
 
     def process_event(self, event):
         return self.parse(event)

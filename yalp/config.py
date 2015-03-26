@@ -3,15 +3,42 @@
 yalp.config
 ===========
 '''
+from __future__ import print_function
+
 import os
 import yaml
 
-import logging
-logger = logging.getLogger(__name__)
+from logging.config import dictConfig
 
 
 EMPTY = object()
 
+DEFAULT_LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'yalp.inputs': {
+            'handlers': ['console'],
+        },
+        'yalp.parsers': {
+            'handlers': ['console'],
+        },
+        'yalp.outputs': {
+            'handlers': ['console'],
+        },
+    }
+}
 
 DEFAULT_OPTS = {
     'broker_url': 'amqp://guest:guest@localhost:5672//',
@@ -29,6 +56,9 @@ DEFAULT_OPTS = {
     'input_packages': ['yalp.inputs'],
     'parser_packages': ['yalp.parsers'],
     'output_packages': ['yalp.outputs'],
+    'log_format': '%(name)s: %(levelname)s [%(module)s:%(lineno)s] %(message)s',
+    'log_level': 'WARN',
+    'logging': None,
 }
 
 
@@ -43,8 +73,7 @@ def _read_conf_file(path):
         try:
             conf_opts = yaml.safe_load(conf_file.read()) or {}
         except yaml.YAMLError as err:
-            logger.error(
-                'Error parsing configuration file: %s - %s', path, err)
+            print('Error parsing configuration file: %s - %s' % (path, err))
             conf_opts = {}
         return conf_opts
 
@@ -116,6 +145,18 @@ class LazySettings(LazyObject):
     def _setup(self):
         settings_file = os.environ.get('YALP_CONFIG_FILE', None)
         self._wrapped = Settings(settings_file)
+        self._configure_logging()
+
+    def _configure_logging(self):
+        ''' Configure logger from settings '''
+        defauls = DEFAULT_LOGGING.copy()
+        defauls['formatters']['simple']['format'] = self.log_format
+        defauls['loggers']['yalp.inputs']['level'] = self.log_level
+        defauls['loggers']['yalp.parsers']['level'] = self.log_level
+        defauls['loggers']['yalp.outputs']['level'] = self.log_level
+        dictConfig(defauls)
+        if self.logging:
+            dictConfig(self.logging)
 
 
 class Settings(object):
