@@ -142,3 +142,14 @@ This outputer can then be configured ``yalp.yml``:
       - customoutputer:
           custom_option: 'option'
           type: 'custom'
+
+
+Logging in Custom PLugins
+-------------------------
+
+All ``Base*`` plugin classes have logging already setup.This ensures that log
+messages are correctly routed based on the components. Log messages by using:
+
+.. code-block:: python
+
+    self.logger.warning('Warning message')
