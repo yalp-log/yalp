@@ -18,22 +18,31 @@ DEFAULT_LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'simple': {
-            'format': '%(processName)s: %(levelname)s [%(name)s:%(lineno)s] %(message)s',  # pylint: disable=C0301
+            'format': '%(name)s: %(levelname)s [%(module)s:%(lineno)s] %(message)s',  # pylint: disable=C0301
+        },
+        'simple-date': {
+            'format': '%(asctime)s %(processName)s: %(levelname)s [%(name)s:%(lineno)s] %(message)s',  # pylint: disable=C0301
         },
     },
     'handlers': {
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
     },
     'loggers': {
-        'yalp': {
+        'yalp.inputs': {
             'handlers': ['console'],
+            'level': 'WARN',
         },
-        'py.warnings': {
+        'yalp.parsers': {
             'handlers': ['console'],
+            'level': 'WARN',
+        },
+        'yalp.outputs': {
+            'handlers': ['console'],
+            'level': 'WARN',
         },
     }
 }

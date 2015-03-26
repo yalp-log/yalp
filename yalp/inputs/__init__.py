@@ -3,6 +3,7 @@
 yalp.inputs
 ===========
 '''
+import logging
 from ..config import settings
 from ..utils import get_hostname
 from ..pipeline import ThreadPipline
@@ -13,6 +14,7 @@ class BaseInputer(ThreadPipline):
 
     def __init__(self, *args, **kwargs):
         super(BaseInputer, self).__init__(*args, **kwargs)
+        self.logger = logging.getLogger(__name__)
         self.hostname = get_hostname()
 
     def enqueue_event(self, event):

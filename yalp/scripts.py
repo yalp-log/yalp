@@ -11,9 +11,6 @@ import sys
 import time
 import argparse
 
-import logging
-logger = logging.getLogger(__name__)
-
 from . import version
 from .config import settings
 from .utils import get_yalp_class, get_hostname

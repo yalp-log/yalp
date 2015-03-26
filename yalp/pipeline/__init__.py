@@ -4,9 +4,7 @@ yalp.pipeline
 =============
 '''
 import threading
-
 import logging
-logger = logging.getLogger(__name__)
 
 
 class BasePipline(object):
@@ -24,17 +22,19 @@ class CeleryPipeline(BasePipline):
     '''
     def __init__(self, **kwargs):
         super(CeleryPipeline, self).__init__(**kwargs)
+        self.logger = logging.getLogger(__name__)
 
     def run(self, event):
         '''
         Execute this pipeline component with the event.
         '''
         if self.type_ != event.get('type', None):
-            logger.info('%s skipping event %s: not same type',
-                        self.__class__.__name__,
-                        event)
+            self.logger.info('%s skipping event %s: not same type',
+                             self.__class__.__name__,
+                             event)
             return None
         else:
+            self.logger.info('processing event %s', event)
             return self.process_event(event)
 
     def process_event(self, event):
