@@ -33,3 +33,7 @@
 #      uri: 'mongodb://localhost:27017/yalp'
 #      database: yalp
 #      collection: logs
+
+# Simple Logging configuration
+#log_format: '%(name)s: %(levelname)s [%(module)s:%(lineno)s] %(message)s'
+#log_level: 'WARN'

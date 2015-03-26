@@ -18,10 +18,6 @@ DEFAULT_LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'simple': {
-            'format': '%(name)s: %(levelname)s [%(module)s:%(lineno)s] %(message)s',  # pylint: disable=C0301
-        },
-        'simple-date': {
-            'format': '%(asctime)s %(processName)s: %(levelname)s [%(name)s:%(lineno)s] %(message)s',  # pylint: disable=C0301
         },
     },
     'handlers': {
@@ -34,15 +30,12 @@ DEFAULT_LOGGING = {
     'loggers': {
         'yalp.inputs': {
             'handlers': ['console'],
-            'level': 'WARN',
         },
         'yalp.parsers': {
             'handlers': ['console'],
-            'level': 'WARN',
         },
         'yalp.outputs': {
             'handlers': ['console'],
-            'level': 'WARN',
         },
     }
 }
@@ -63,6 +56,8 @@ DEFAULT_OPTS = {
     'input_packages': ['yalp.inputs'],
     'parser_packages': ['yalp.parsers'],
     'output_packages': ['yalp.outputs'],
+    'log_format': '%(name)s: %(levelname)s [%(module)s:%(lineno)s] %(message)s',
+    'log_level': 'WARN',
     'logging': None,
 }
 
@@ -154,7 +149,12 @@ class LazySettings(LazyObject):
 
     def _configure_logging(self):
         ''' Configure logger from settings '''
-        dictConfig(DEFAULT_LOGGING)
+        defauls = DEFAULT_LOGGING.copy()
+        defauls['formatters']['simple']['format'] = self.log_format
+        defauls['loggers']['yalp.inputs']['level'] = self.log_level
+        defauls['loggers']['yalp.parsers']['level'] = self.log_level
+        defauls['loggers']['yalp.outputs']['level'] = self.log_level
+        dictConfig(defauls)
         if self.logging:
             dictConfig(self.logging)
 
