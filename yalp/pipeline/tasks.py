@@ -149,7 +149,6 @@ def process_message(event):
     message
         The message to process, generally a string.
     '''
-
     parsed_events = [parser.run(event) for parser in process_message.parsers]
     for parsed_event in parsed_events:
         if parsed_event:
