@@ -43,6 +43,7 @@ Then install via pypi_ using ``pip`` or ``easy_install``.
 The three components ``yalp-inputs``, ``yalp-parsers`` and ``yalp-outputs``,
 should now be accessible.
 
+.. _configuration:
 
 Configuration
 -------------
@@ -121,7 +122,7 @@ same ``type`` will process the message. The general format is as follows.
 
 .. sidebar:: Options for pluings
 
-    See the :doc:`Full Plugin Reference </ref/index>` for options the the
+    See the :doc:`Full Plugin Reference </ref/index>` for options to the
     plugins.
 
 .. code-block:: yaml
