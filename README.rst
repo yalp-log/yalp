@@ -30,6 +30,11 @@ Distributed log parsing and collection.
     :scale: 100%
     :target: https://yalp.readthedocs.org
 
+.. |health| image:: https://landscape.io/github/yalp-log/yalp/master/landscape.svg?style=flat
+   :alt: Code Health
+    :scale: 100%
+   :target: https://landscape.io/github/yalp-log/yalp/master
+
 
 Install and Configure
 ---------------------
