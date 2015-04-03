@@ -1,7 +1,7 @@
 YALP
 ====
 
-|build-status| |coverage| |deps| |pypi| |docs|
+|build-status| |coverage| |deps| |pypi| |docs| |health|
 
 Distributed log parsing and collection.
 
