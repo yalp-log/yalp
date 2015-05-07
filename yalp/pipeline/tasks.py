@@ -48,6 +48,7 @@ class YalpOutputersConsumer(bootsteps.ConsumerStep):
                               Exchange(settings.output_queue),
                               settings.output_queue)],
                 callbacks=[self.handle_message],
+                accept=['pickle', 'json', 'msgpack', 'yaml'],
             )
         ]
 
