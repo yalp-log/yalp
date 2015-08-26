@@ -64,7 +64,10 @@ function. The class name must be ``Parser`` for YALP's plugin import system to
 discover the parser. The module name will be used to configure the parser. The
 ``BaseParser`` is written so that the ``parse`` function will only be called if
 the event passes the ``type`` filter, thus ``parse`` can assume it is ment to
-parse the event. The ``parse`` function must return the parsed event.
+parse the event. The event will be a dict containing the ``hostname``,
+``type``, and ``message`` keys. The ``parse`` function should remove the
+``message`` from the event dict, parse the message and set new key/values into
+the event to sent to the outputer.
 
 
 Example Parser ``customparser.py``:
@@ -105,7 +108,7 @@ Outputers must inherit from ``BaseOutputer`` and must implement the ``output``
 and ``shutdown`` functions. The class name must be ``Outputer`` for YALP's
 plugin import system to discover the outputer. The module name will be used to
 configure the outputer. The ``BaseOutpuer`` is written so that the ``output``
-function is only called if the event passes teh ``type`` filter, thus
+function is only called if the event passes the ``type`` filter, thus
 ``output`` can assume the event should be output. The ``shutdown`` function is
 called when the service is stopped. It should preform and cleanup, cleanly
 releasing any resources.
