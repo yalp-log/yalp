@@ -28,6 +28,7 @@ class TestInputEntryPoint(unittest.TestCase):
     Test scripts.InputsEntryPoint.
     '''
     def setUp(self):
+        settings.home = '/tmp'
         settings.inputs = [{
             'file': {
                 'path': '/dev/null',
