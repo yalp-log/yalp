@@ -135,6 +135,7 @@ def process_output(event):
                 'id': uuid(),
                 'message': event
             },
+            serializer=settings.celery_serializer,
             exchange=exchange,
             routing_key=settings.output_queue,
             declare=[queue],
