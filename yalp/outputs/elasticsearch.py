@@ -38,6 +38,7 @@ from __future__ import absolute_import
 
 try:
     from elasticsearch import Elasticsearch
+    from elasticsearch.exceptions import ElasticsearchException
 except ImportError:  # pragma: no cover
     pass
 from . import BaseOutputer
@@ -60,7 +61,14 @@ class Outputer(BaseOutputer):
         self.es.indices.create(index=self.index, ignore=400)
 
     def output(self, event):
-        self.es.create(index=self.index, doc_type=self.doc_type, body=event)
+        try:
+            self.es.create(
+                index=self.index,
+                doc_type=self.doc_type,
+                body=event,
+            )
+        except ElasticsearchException:
+            self.logger.error('Error processing output', exc_info=True)
 
     def shutdown(self):
         self.es.indices.flush(self.index)
