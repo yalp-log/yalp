@@ -32,6 +32,7 @@ class BaseInputer(ThreadPipline):
             tasks.process_message.apply_async(
                 args=[event],
                 queue=settings.parser_queue,
+                serializer=settings.celery_serializer,
             )
         else:
             tasks.process_output(event)

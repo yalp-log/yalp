@@ -49,6 +49,7 @@ DEFAULT_OPTS = {
     'parser_workers': 5,
     'output_workers': 1,
     'celery_advanced': {},
+    'celery_serializer': 'pickle',
     'inputs': [],
     'parsers': [],
     'outputs': [],

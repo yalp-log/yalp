@@ -6,6 +6,7 @@ test.inputs.test_file
 import unittest
 import time
 
+from yalp.config import settings
 from yalp.inputs import file as file_inputer
 
 try:
@@ -28,6 +29,7 @@ class TestFileInput(unittest.TestCase):
     Test the file.Inputer
     '''
     def setUp(self):
+        settings.home = '/tmp'
         self.inputer = file_inputer.Inputer('/dev/null')
         self.inputer.enqueue_event = MagicMock()
 

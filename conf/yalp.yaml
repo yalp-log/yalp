@@ -9,6 +9,7 @@
 #output_worker_name: output-workers
 #parser_workers: 5
 #output_workers: 1
+#celery_serializer: pickle
 
 # Plugin configuration
 #input_packages:
