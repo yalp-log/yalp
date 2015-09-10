@@ -113,10 +113,6 @@ TEMPLATE = {
                 }
             ],
             'properties': {
-                '@version': {
-                    'type': 'string',
-                    'index': 'not_analyzed',
-                },
                 'geoip': {
                     'type': 'object',
                     'dynamic': True,
