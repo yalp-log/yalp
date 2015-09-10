@@ -16,6 +16,7 @@ class TestRegexParser(unittest.TestCase):
         event = {
             'host': 'localhost',
             'message': 'Dec 10 an event',
+            'time_stamp': '2015-01-01T00:00:00',
         }
         parser = regex.Parser(regex=r'(?P<month>\w+)\s+(?P<day>\d+)')
         parsed_event = parser.run(event)
@@ -25,6 +26,7 @@ class TestRegexParser(unittest.TestCase):
                 'host': 'localhost',
                 'month': 'Dec',
                 'day': '10',
+                'time_stamp': '2015-01-01T00:00:00',
             }
         )
 
@@ -32,6 +34,7 @@ class TestRegexParser(unittest.TestCase):
         event = {
             'host': 'localhost',
             'message': 'Dec',
+            'time_stamp': '2015-01-01T00:00:00',
         }
         parser = regex.Parser(regex=r'(?P<month>\w+)\s+(?P<day>\d+)')
         parsed_event = parser.run(event)

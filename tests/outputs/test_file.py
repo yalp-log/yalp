@@ -25,6 +25,7 @@ class TestFileOutput(unittest.TestCase):
         event = {
             'host': 'localhost',
             'message': 'test message',
+            'time_stamp': '2015-01-01T00:00:00',
         }
         outputer = file_outputer.Outputer()
         outputer.run(event)
@@ -38,6 +39,7 @@ class TestFileOutput(unittest.TestCase):
             'host': 'localhost',
             'message': 'test message',
             'type': 'no out',
+            'time_stamp': '2015-01-01T00:00:00',
         }
         outputer = file_outputer.Outputer()
         outputer.run(event)
