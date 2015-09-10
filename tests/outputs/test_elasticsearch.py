@@ -103,7 +103,7 @@ class TestElasticsearchOutput(unittest.TestCase):
         event = {
             'host': 'localhost',
             'message': 'test message',
-            'time_stamp': {'day': 01, 'month': 01}
+            'time_stamp': {'day': 1, 'month': 1}
         }
         outputer = elasticsearch.Outputer(
             uri=self.config['uri'],
