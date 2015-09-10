@@ -66,6 +66,7 @@ try:
     from elasticsearch.exceptions import ElasticsearchException
 except ImportError:  # pragma: no cover
     pass
+from ..exceptions import OutputException
 from . import BaseOutputer
 
 
@@ -171,10 +172,13 @@ class Outputer(BaseOutputer):
                 return time_stamp.strftime(self.index)
             except KeyError:
                 self.logger.error('Time based event without time stamp')
+                raise OutputException
             except ValueError:
                 self.logger.error('Time stamp invalid datetime format')
+                raise OutputException
             except AttributeError:
                 self.logger.error('Time stamp not datetime or str')
+                raise OutputException
         else:
             return self.index
 
@@ -187,6 +191,8 @@ class Outputer(BaseOutputer):
             )
         except ElasticsearchException:
             self.logger.error('Error processing output', exc_info=True)
+        except OutputException:
+            self.logger.error('Output exception', exc_info=True)
 
     def shutdown(self):
         self.es.indices.flush(

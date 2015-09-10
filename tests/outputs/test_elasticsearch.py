@@ -50,6 +50,71 @@ class TestElasticsearchOutput(unittest.TestCase):
         count = self.es.count(self.index, self.doc_type).get('count')
         self.assertEqual(count, 1)
 
+    def test_output_event_not_time_based(self):
+        event = {
+            'host': 'localhost',
+            'message': 'test message',
+            'time_stamp': '2015-01-01T00:00:00',
+        }
+        outputer = elasticsearch.Outputer(
+            uri=self.config['uri'],
+            index=self.config['index'],
+            doc_type=self.config['doc_type'],
+            template_overwrite=True,
+            time_based=False,
+        )
+        outputer.run(event)
+        outputer.shutdown()
+        count = self.es.count(self.index, self.doc_type).get('count')
+        self.assertEqual(count, 1)
+
+    def test_missing_timestamp(self):
+        event = {
+            'host': 'localhost',
+            'message': 'test message',
+        }
+        outputer = elasticsearch.Outputer(
+            uri=self.config['uri'],
+            index=self.config['index'],
+            doc_type=self.config['doc_type'],
+            template_overwrite=True,
+        )
+        outputer.run(event)
+        outputer.shutdown()
+        self.assertFalse(self.es.indices.exists(index=self.index))
+
+    def test_invalid_timestamp_str(self):
+        event = {
+            'host': 'localhost',
+            'message': 'test message',
+            'time_stamp': 'Sunday',
+        }
+        outputer = elasticsearch.Outputer(
+            uri=self.config['uri'],
+            index=self.config['index'],
+            doc_type=self.config['doc_type'],
+            template_overwrite=True,
+        )
+        outputer.run(event)
+        outputer.shutdown()
+        self.assertFalse(self.es.indices.exists(index=self.index))
+
+    def test_invalid_timestamp_wrong_type(self):
+        event = {
+            'host': 'localhost',
+            'message': 'test message',
+            'time_stamp': {'day': 01, 'month': 01}
+        }
+        outputer = elasticsearch.Outputer(
+            uri=self.config['uri'],
+            index=self.config['index'],
+            doc_type=self.config['doc_type'],
+            template_overwrite=True,
+        )
+        outputer.run(event)
+        outputer.shutdown()
+        self.assertFalse(self.es.indices.exists(index=self.index))
+
     def test_output_event_skip_on_type(self):
         event = {
             'host': 'localhost',
