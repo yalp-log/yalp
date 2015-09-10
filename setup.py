@@ -37,7 +37,7 @@ SETUP_KWARGS = {
     'version': VER,
     'url': 'https://github.com/yalp-log/yalp',
     'license': 'Apache-2',
-    'description': '',
+    'description': 'Distributed log parsing and collection.',
     'author': 'Timothy Messier',
     'author_email': 'tim.messier@gmail.com',
     'classifiers': [
