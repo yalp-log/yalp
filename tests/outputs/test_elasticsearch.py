@@ -24,7 +24,6 @@ class TestElasticsearchOutput(unittest.TestCase):
                 self.index = self.config['index']
                 self.doc_type = self.config['doc_type']
                 self.es.indices.delete('*')
-                self.es.indices.create(index=self.index, ignore=400)
             except es_dep.ConnectionError:
                 raise ImportError
         except ImportError:
@@ -38,11 +37,13 @@ class TestElasticsearchOutput(unittest.TestCase):
         event = {
             'host': 'localhost',
             'message': 'test message',
+            'time_stamp': '2015-01-01T00:00:00',
         }
         outputer = elasticsearch.Outputer(
             uri=self.config['uri'],
             index=self.config['index'],
-            doc_type=self.config['doc_type']
+            doc_type=self.config['doc_type'],
+            template_overwrite=True,
         )
         outputer.run(event)
         outputer.shutdown()
@@ -54,13 +55,14 @@ class TestElasticsearchOutput(unittest.TestCase):
             'host': 'localhost',
             'message': 'test message',
             'type': 'no elasticsearch',
+            'time_stamp': '2015-01-01T00:00:00',
         }
         outputer = elasticsearch.Outputer(
             uri=self.config['uri'],
             index=self.config['index'],
-            doc_type=self.config['doc_type']
+            doc_type=self.config['doc_type'],
+            template_overwrite=True,
         )
         outputer.run(event)
         outputer.shutdown()
-        count = self.es.count(self.index, self.doc_type).get('count')
-        self.assertEqual(count, 0)
+        self.assertFalse(self.es.indices.exists(index=self.index))

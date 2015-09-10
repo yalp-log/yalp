@@ -15,6 +15,7 @@ class TestPassthroughParser(unittest.TestCase):
         event = {
             'host': 'localhost',
             'message': 'test message',
+            'time_stamp': '2015-01-01T00:00:00',
         }
         parser = passthrough.Parser()
         parsed_event = parser.run(event)
@@ -25,6 +26,7 @@ class TestPassthroughParser(unittest.TestCase):
             'host': 'localhost',
             'message': 'test message',
             'type': 'no_pass',
+            'time_stamp': '2015-01-01T00:00:00',
         }
         parser = passthrough.Parser()
         parsed_event = parser.run(event)

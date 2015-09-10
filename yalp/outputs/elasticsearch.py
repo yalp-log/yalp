@@ -193,4 +193,7 @@ class Outputer(BaseOutputer):
             self.logger.error('Error processing output', exc_info=True)
 
     def shutdown(self):
-        self.es.indices.flush(self.index)
+        self.es.indices.flush(
+            index='_all',
+            ignore_unavailable=True,
+        )

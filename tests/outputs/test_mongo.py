@@ -34,6 +34,7 @@ class TestMongoOutput(unittest.TestCase):
         event = {
             'host': 'localhost',
             'message': 'test message',
+            'time_stamp': '2015-01-01T00:00:00',
         }
         outputer = mongo.Outputer(
             uri=self.config['uri'],
@@ -52,6 +53,7 @@ class TestMongoOutput(unittest.TestCase):
             'host': 'localhost',
             'message': 'test message',
             'type': 'no mongo',
+            'time_stamp': '2015-01-01T00:00:00',
         }
         outputer = mongo.Outputer(
             uri=self.config['uri'],
