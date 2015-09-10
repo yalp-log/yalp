@@ -3,10 +3,15 @@
 yalp.inputs
 ===========
 '''
-import logging
+from datetime import datetime
+
 from ..config import settings
 from ..utils import get_hostname
 from ..pipeline import ThreadPipline
+
+import logging
+
+_DATE_FMT = '%Y-%m-%dT%H:%M:%S'
 
 
 class BaseInputer(ThreadPipline):
@@ -27,6 +32,8 @@ class BaseInputer(ThreadPipline):
         if self.type_:
             event['type'] = self.type_
         event['hostname'] = self.hostname
+        if 'time_stamp' not in event:
+            event['time_stamp'] = datetime.now().strftime(_DATE_FMT)
         from yalp.pipeline import tasks
         if settings.parsers:
             tasks.process_message.apply_async(
