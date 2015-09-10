@@ -44,6 +44,63 @@ except ImportError:  # pragma: no cover
 from . import BaseOutputer
 
 
+TEMPLATE = {
+    'template': 'yalp-*',
+    'settings': {
+        'index.refresh_interval': '5s',
+    },
+    'mappings': {
+        '_default_': {
+            '_all': {
+                'enabled': True,
+                'omit_norms': True,
+            },
+            'dynamic_templates': [{
+                'message_field': {
+                    'match': 'message',
+                    'match_mapping_type': 'string',
+                    'mapping': {
+                        'type': 'string',
+                        'index': 'analyzed',
+                        'omit_norms': True,
+                    },
+                },
+                'string_fields': {
+                    'match': '*',
+                    'match_mapping_type': 'string',
+                    'mapping': {
+                        'type': 'string',
+                        'index': 'analyzed',
+                        'omit_norms': True,
+                        'fields': {
+                            'raw': {
+                                'type': 'string',
+                                'index':
+                                'not_analyzed',
+                                'ignore_above': 256,
+                            },
+                        },
+                    },
+                },
+            }],
+            'properties': {
+                '@version': {
+                    'type': 'string',
+                    'index': 'not_analyzed',
+                },
+                'geoip': {
+                    'type': 'object',
+                    'dynamic': True,
+                    'properties': {
+                        'location': {'type': 'geo_point'},
+                    },
+                }
+            },
+        },
+    },
+}
+
+
 class Outputer(BaseOutputer):
     '''
     Send output to elasticsearch
@@ -52,6 +109,7 @@ class Outputer(BaseOutputer):
                  uri,
                  index,
                  doc_type,
+                 template_settings,
                  *args,
                  **kwargs):
         super(Outputer, self).__init__(*args, **kwargs)
@@ -59,6 +117,12 @@ class Outputer(BaseOutputer):
         self.index = index
         self.doc_type = doc_type
         self.es.indices.create(index=self.index, ignore=400)
+        if template_settings['manage']:
+            self.es.indices.put_template(
+                template_settings['name'],
+                TEMPLATE,
+                template_settings['override'],
+            )
 
     def output(self, event):
         try:
