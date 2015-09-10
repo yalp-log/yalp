@@ -107,6 +107,7 @@ TEMPLATE = {
                                     'index':
                                     'not_analyzed',
                                     'ignore_above': 256,
+                                    'doc_values': True,
                                 },
                             },
                         },
