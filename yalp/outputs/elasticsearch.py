@@ -148,14 +148,15 @@ class Outputer(BaseOutputer):
         self.doc_type = doc_type
         self.time_based = time_based
         self.time_stamp_fmt = time_stamp_fmt
-        if not self.time_based:
-            self.es.indices.create(index=self.index, ignore=400)
         if manage_template:
             self.es.indices.put_template(
                 name=template_name,
                 body=TEMPLATE,
                 create=not template_overwrite,
+                ignore=400,
             )
+        if not self.time_based:
+            self.es.indices.create(index=self.index, ignore=400)
 
     def get_index(self, event):
         '''
