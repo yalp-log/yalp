@@ -16,7 +16,7 @@ This outputer supports the following configuration items:
 
 *index*
     The index name to store the documents. Default to
-    ``yalp-%Y-%m-%d``.  The index can contain a `date format`_ string
+    ``yalp-%Y.%m.%d``.  The index can contain a `date format`_ string
     for a dynamic index.
 
 *doc_type*
@@ -52,7 +52,7 @@ Example configuration.
     outputs:
       - elasticsearch:
           uri: 'http://localhost:9200/'
-          index: "yalp-%Y-%m-%d"
+          index: "yalp-%Y.%m.%d"
           doc_type: logs
 
 .. _pyelasticsearch: https://pypi.python.org/pypi/pyelasticsearch/
@@ -107,6 +107,7 @@ TEMPLATE = {
                                     'index':
                                     'not_analyzed',
                                     'ignore_above': 256,
+                                    'doc_values': True,
                                 },
                             },
                         },
@@ -133,7 +134,7 @@ class Outputer(BaseOutputer):
     '''
     def __init__(self,
                  uri='http://localhost:9200/',
-                 index='yalp-%Y-%m-%d',
+                 index='yalp-%Y.%m.%d',
                  doc_type='logs',
                  manage_template=True,
                  template_name='yalp',
@@ -148,14 +149,15 @@ class Outputer(BaseOutputer):
         self.doc_type = doc_type
         self.time_based = time_based
         self.time_stamp_fmt = time_stamp_fmt
-        if not self.time_based:
-            self.es.indices.create(index=self.index, ignore=400)
         if manage_template:
             self.es.indices.put_template(
                 name=template_name,
                 body=TEMPLATE,
                 create=not template_overwrite,
+                ignore=400,
             )
+        if not self.time_based:
+            self.es.indices.create(index=self.index, ignore=400)
 
     def get_index(self, event):
         '''
