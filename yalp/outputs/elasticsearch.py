@@ -16,7 +16,7 @@ This outputer supports the following configuration items:
 
 *index*
     The index name to store the documents. Default to
-    ``yalp-%Y-%m-%d``.  The index can contain a `date format`_ string
+    ``yalp-%Y.%m.%d``.  The index can contain a `date format`_ string
     for a dynamic index.
 
 *doc_type*
@@ -52,7 +52,7 @@ Example configuration.
     outputs:
       - elasticsearch:
           uri: 'http://localhost:9200/'
-          index: "yalp-%Y-%m-%d"
+          index: "yalp-%Y.%m.%d"
           doc_type: logs
 
 .. _pyelasticsearch: https://pypi.python.org/pypi/pyelasticsearch/
@@ -133,7 +133,7 @@ class Outputer(BaseOutputer):
     '''
     def __init__(self,
                  uri='http://localhost:9200/',
-                 index='yalp-%Y-%m-%d',
+                 index='yalp-%Y.%m.%d',
                  doc_type='logs',
                  manage_template=True,
                  template_name='yalp',
