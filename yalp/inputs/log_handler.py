@@ -31,7 +31,7 @@ class Inputer(logging.Handler, InputerMixin, object):
     '''
     Get input from python logging
     '''
-    convert = time.localtime
+    convert = time.gmtime
 
     def __init__(self,
                  pipeline=None,
