@@ -109,7 +109,7 @@ class Inputer(logging.Handler, InputerMixin, object):
                  *args,
                  **kwargs):  # pylint: disable=unused-argument
         pipeline = pipeline or {}
-        self.parsers = pipeline.pop('parsers', False)
+        settings.parsers = pipeline.pop('parsers', False)
         settings.update(pipeline)
         self.type_ = kwargs.get('type')
         self.hostname = get_hostname()
