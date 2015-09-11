@@ -124,7 +124,7 @@ class Inputer(logging.Handler, InputerMixin, object):
 
     def emit(self, record):
         event = {}
-        for key, val in vars(record).iteritems():
+        for key, val in vars(record).items():
             if key.startswith('_') or key in RESEVERD:
                 continue
             event[key] = val
