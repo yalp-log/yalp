@@ -11,16 +11,15 @@ from ..pipeline import ThreadPipline
 
 import logging
 
-_DATE_FMT = '%Y-%m-%dT%H:%M:%S'
+DEFAULT_DATE_FMT = '%Y-%m-%dT%H:%M:%S'
 
 
-class BaseInputer(ThreadPipline):
-    ''' Base Inputer '''
+class InputerMixin(object):
+    '''
+    Mixin for an Inputer
 
-    def __init__(self, *args, **kwargs):
-        super(BaseInputer, self).__init__(*args, **kwargs)
-        self.logger = logging.getLogger(__name__)
-        self.hostname = get_hostname()
+    Makes it easy to enqueue events.
+    '''
 
     def enqueue_event(self, event):
         '''
@@ -29,11 +28,11 @@ class BaseInputer(ThreadPipline):
         Send the event to the parsers queue, unless there are no parsers
         in the config. Then send the event directly to the outputs.
         '''
-        if self.type_:
+        if self.type_ and 'type' not in event:
             event['type'] = self.type_
         event['hostname'] = self.hostname
         if 'time_stamp' not in event:
-            event['time_stamp'] = datetime.now().strftime(_DATE_FMT)
+            event['time_stamp'] = datetime.now().strftime(DEFAULT_DATE_FMT)
         from yalp.pipeline import tasks
         if settings.parsers:
             tasks.process_message.apply_async(
@@ -43,3 +42,12 @@ class BaseInputer(ThreadPipline):
             )
         else:
             tasks.process_output(event)
+
+
+class BaseInputer(InputerMixin, ThreadPipline):
+    ''' Base Inputer '''
+
+    def __init__(self, *args, **kwargs):
+        super(BaseInputer, self).__init__(*args, **kwargs)
+        self.logger = logging.getLogger(__name__)
+        self.hostname = get_hostname()

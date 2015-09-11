@@ -159,6 +159,11 @@ class LazySettings(LazyObject):
         if self.logging:
             dictConfig(self.logging)
 
+    def update(self, update_dict):
+        ''' Update settings from dict '''
+        for key, val in update_dict.items():
+            self.__setattr__(key, val)
+
 
 class Settings(object):
     '''

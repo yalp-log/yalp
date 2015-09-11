@@ -28,3 +28,4 @@ Full List of Inputers
 .. toctree::
 
     yalp.inputs.file
+    yalp.inputs.log_handler
