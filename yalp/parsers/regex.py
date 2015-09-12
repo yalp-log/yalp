@@ -13,7 +13,10 @@ matched strings becoming the values.
 This parser supports the following configuration items:
 
 **regex**
-    The regex to apply.  *type* A type filter. Only apply the regex to events of this type.
+    The regex to apply.
+
+*type*
+    A type filter. Only apply the regex to events of this type.
 
 
 Example configuration.

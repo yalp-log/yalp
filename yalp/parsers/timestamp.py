@@ -19,6 +19,9 @@ The parser supports the following configuration items:
     The `date format`_ string to format the time stamp. Defaults to
     ``%Y-%m-%dT$H:%M:%S``.
 
+*type*
+    A type filter. Events not of this type will be skipped.
+
 Examaple configuration.
 
 .. code-block:: yaml
@@ -53,7 +56,7 @@ class Parser(BaseParser):
 
     def parse(self, event):
         if self.field in event:
-            event[self.out_field] = dt_parse(
+            event[self.out_field] = dt_parse(  # pylint: disable=no-member
                 event[self.field],
                 fuzzy=True
             ).strftime(self.timestamp_fmt)
