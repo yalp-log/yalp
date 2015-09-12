@@ -22,6 +22,7 @@ The parser supports the following configuration items:
 *type*
     A type filter. Events not of this type will be skipped.
 
+
 Examaple configuration.
 
 .. code-block:: yaml
