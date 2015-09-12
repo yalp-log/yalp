@@ -31,7 +31,7 @@ With an input event like the following:
 .. code-block:: python
 
     {
-        'messaage': '192.168.0.1 GET /index.html'
+        'message': '192.168.0.1 GET /index.html',
         'time_stamp': '2015-01-01T01:00:00',
         'hostname': 'server_hostname',
     }
@@ -41,7 +41,7 @@ After the parser runs, the event will become:
 .. code-block:: python
 
     {
-        'messaage': '192.168.0.1 GET /index.html'
+        'message': '192.168.0.1 GET /index.html',
         'time_stamp': '2015-01-01T01:00:00',
         'hostname': 'server_hostname',
         'ip_addr': '192.168.0.1',
@@ -60,7 +60,7 @@ class Parser(BaseParser):
     '''
     Process input with grok pattern match.
     '''
-    def __init__(self, field='mesage', pattern=None, *args, **kwargs):
+    def __init__(self, field='message', pattern=None, *args, **kwargs):
         super(Parser, self).__init__(*args, **kwargs)
         self.pattern = pattern
         self.field = field
