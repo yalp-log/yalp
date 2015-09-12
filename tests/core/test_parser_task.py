@@ -24,4 +24,4 @@ class TestParserTask(YalpTestCase):
             'message': 'test message',
         }
         result = tasks.process_message.apply(args=[event])
-        self.assertIn(event, result.result)
+        self.assertEqual(event, result.result)

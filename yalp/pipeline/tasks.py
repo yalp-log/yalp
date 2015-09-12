@@ -148,11 +148,18 @@ def process_message(event):
     '''
     Process a message using settings from config.
 
-    message
-        The message to process, generally a string.
+    event
+        The event to process. A dict containing the message. For example:
+
+        .. code-block:: python
+
+            {
+                'message': 'the message to parse',
+                'time_stamp': '2015-01-01T01:00:00',
+                'hostname': 'input_host',
+            }
     '''
-    parsed_events = [parser.run(event) for parser in process_message.parsers]
-    for parsed_event in parsed_events:
-        if parsed_event:
-            process_output(event)
-    return parsed_events
+    for parser in process_message.parsers:
+        event = parser.run(event)
+    process_output(event)
+    return event

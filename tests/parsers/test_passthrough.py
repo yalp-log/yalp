@@ -30,4 +30,4 @@ class TestPassthroughParser(unittest.TestCase):
         }
         parser = passthrough.Parser()
         parsed_event = parser.run(event)
-        self.assertIsNone(parsed_event)
+        self.assertDictEqual(event, parsed_event)
