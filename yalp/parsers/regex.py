@@ -14,6 +14,7 @@ This parser supports the following configuration items:
 
 **regex**
     The regex to apply.
+
 *type*
     A type filter. Only apply the regex to events of this type.
 
@@ -44,6 +45,4 @@ class Parser(BaseParser):
         match = re.match(self.regex, message)
         if match:
             event.update(match.groupdict())
-            return event
-        else:
-            return None
+        return event

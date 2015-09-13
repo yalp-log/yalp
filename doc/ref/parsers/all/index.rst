@@ -13,7 +13,7 @@ Example parsed event:
     {
       'hostname': 'localhost',
       'remote_addr': '127.0.0.1',
-      'time': '13/Mar/2014:13:46:00',
+      'time_stamp': '2014-03-13T13:46:00',
       'request': '/',
       'status': '200',
       'bytes_send': '6301',
@@ -30,3 +30,4 @@ Full List of Parsers
 .. toctree::
 
     yalp.parsers.regex
+    yalp.parsers.timestamp

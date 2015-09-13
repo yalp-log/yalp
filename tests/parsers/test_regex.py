@@ -38,7 +38,7 @@ class TestRegexParser(unittest.TestCase):
         }
         parser = regex.Parser(regex=r'(?P<month>\w+)\s+(?P<day>\d+)')
         parsed_event = parser.run(event)
-        self.assertIsNone(parsed_event)
+        self.assertDictEqual(event, parsed_event)
 
     def test_parse_event_skip_on_type(self):
         event = {
@@ -48,4 +48,4 @@ class TestRegexParser(unittest.TestCase):
         }
         parser = regex.Parser(regex=r'(?P<month>\w+)\s+(?P<day>\d+)')
         parsed_event = parser.run(event)
-        self.assertIsNone(parsed_event)
+        self.assertDictEqual(event, parsed_event)

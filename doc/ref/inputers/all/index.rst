@@ -16,6 +16,7 @@ Example input event:
     {
       'hostname': 'localhost',
       'message': '127.0.0.1 - - [13/Mar/2014:13:46:00 -0400] "GET / HTTP/1.1" 200 6301 "-" "Mozilla/5.0 (X11; Linux x86_64; rv:24.0) Gecko/20100101 Firefox/24.0" "6.57"',
+      'time_stamp': '2014-03-13T13:46:00',
       'type': 'nginx',
     }
 
