@@ -1,2 +1,2 @@
 elasticsearch==1.6.0
-pymongo==3.0.2
+pymongo==3.0.3
