@@ -31,3 +31,4 @@ Full List of Parsers
 
     yalp.parsers.regex
     yalp.parsers.timestamp
+    yalp.parsers.user_agent
