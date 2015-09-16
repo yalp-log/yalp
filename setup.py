@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 # vim: set et ts=4 sw=4 fileencoding=utf-8:
 '''
 Setup script for yalp
@@ -66,4 +66,4 @@ SETUP_KWARGS = {
 }
 
 if __name__ == '__main__':
-    setup(**SETUP_KWARGS)  # pylint: disable=W0142
+    setup(**SETUP_KWARGS)

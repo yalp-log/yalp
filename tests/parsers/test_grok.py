@@ -31,3 +31,32 @@ class TestGrokParser(unittest.TestCase):
             'path': '/index.html',
         }
         self.assertDictEqual(expected, parsed_event)
+
+    def test_nginx_event(self):
+        event = {
+            'message': '127.0.0.1 - - [15/Sep/2015:13:41:35 -0400] "GET /index.html HTTP/1.1" 200 352 "-" "Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"',
+            'time_stamp': '2015-01-01T01:00:00',
+            'hostname': 'server_hostname',
+        }
+        parser = grok.Parser(
+            pattern='%{COMBINEDAPACHELOG}'
+        )
+        parsed_event = parser.run(event)
+        expected = {
+            'message': '127.0.0.1 - - [15/Sep/2015:13:41:35 -0400] "GET /index.html HTTP/1.1" 200 352 "-" "Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"',
+            'time_stamp': '2015-01-01T01:00:00',
+            'hostname': 'server_hostname',
+            'clientip': '127.0.0.1',
+            'ident': '-',
+            'auth': '-',
+            'timestamp': '15/Sep/2015:13:41:35 -0400',
+            'verb': 'GET',
+            'request': '/index.html',
+            'rawrequest': None,
+            'httpversion': '1.1',
+            'response': '200',
+            'bytes': '352',
+            'referrer': '"-"',
+            'agent': '"Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"',
+        }
+        self.assertDictEqual(expected, parsed_event)
