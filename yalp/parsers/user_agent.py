@@ -1,4 +1,5 @@
 # vim: set et ts=4 sw=4 fileencoding=utf-8:
+# pylint: disable=line-too-long
 '''
 yalp.parsers.user_agent
 =======================
@@ -21,7 +22,7 @@ The parser supports the following configuration items:
     A type filter. Events not of this type will be skipped.
 
 
-Example configuration/
+Example configuration.
 
 .. code-block:: yaml
 
@@ -29,7 +30,49 @@ Example configuration/
       - user_agent:
           field: 'agent'
           out_field: 'user_agent'
+
+With an input event like the following:
+
+
+.. code-block:: python
+
+    {
+        'hostname': 'server_hostname',
+        'time_stamp': '2015-01-01T01:00:00',
+        'message': '"Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"',
+        'agent': '"Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"',
+    }
+
+After the parser runs, the vent will become:
+
+.. code-block:: python
+
+    {
+        'hostname': 'server_hostname',
+        'time_stamp': '2015-01-01T01:00:00',
+        'message': '"Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"',
+        'agent': '"Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"',
+        'os': {
+            'family': 'Linux',
+            'version': ''
+        },
+        'browser': {
+            'family': 'Firefox',
+            'version': '38'
+        },
+        'device': {
+            'brand': None,
+            'family': 'Other',
+            'model': None,
+        },
+        'is_bot': False,
+        'is_mobile': False,
+        'is_pc': True,
+        'is_tablet': False,
+        'is_touch_capable': False,
+    }
 '''
+# pylint: enable=line-too-long
 import user_agents
 from . import BaseParser
 
