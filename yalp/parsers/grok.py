@@ -52,7 +52,7 @@ After the parser runs, the event will become:
 .. _available patterns: https://github.com/garyelephant/pygrok/tree/master/pygrok/patterns
 .. _grok: https://www.elastic.co/guide/en/logstash/current/plugins-filters-grok.html#plugins-filters-grok
 '''
-import pygrok
+import yalp_grok as grok
 from . import BaseParser
 
 
@@ -64,9 +64,10 @@ class Parser(BaseParser):
         super(Parser, self).__init__(*args, **kwargs)
         self.pattern = pattern
         self.field = field
+        self.compiled_pattern = grok.compile_pattern(self.pattern)
 
     def parse(self, event):
-        matches = pygrok.grok_match(event[self.field], self.pattern)
+        matches = grok.grok_search(event[self.field], self.compiled_pattern)
         if matches:
             event.update(matches)
         return event
