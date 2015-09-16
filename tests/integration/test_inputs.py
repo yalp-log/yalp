@@ -53,7 +53,11 @@ class TestInputEntryPoint(unittest.TestCase):
     @patch('yalp.inputs.file.open', create=True)
     def test_entry_point(self, mock_open):
         mock_open.side_effect = _side_effect_open
-        entrypoint = scripts.InputsEntryPoint(max_iterations=2, interval=0.2)
+        entrypoint = scripts.InputsEntryPoint(
+            argv=['yalp-inputer'],
+            max_iterations=2,
+            interval=0.2,
+        )
         entrypoint.execute()
         message = self.channel.basic_get(queue='outputs')
         self.assertIsNotNone(message)
