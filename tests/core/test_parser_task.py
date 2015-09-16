@@ -5,8 +5,6 @@ tests.core.test_parser_task
 '''
 from yalp.test import YalpTestCase
 
-from yalp.pipeline import tasks
-
 
 class TestParserTask(YalpTestCase):
     '''
@@ -23,5 +21,6 @@ class TestParserTask(YalpTestCase):
             'host': 'localhost',
             'message': 'test message',
         }
+        from yalp.pipeline import tasks
         result = tasks.process_message.apply(args=[event])
         self.assertEqual(event, result.result)

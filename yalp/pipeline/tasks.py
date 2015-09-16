@@ -119,6 +119,13 @@ class PipelineTask(Task):
             self._parsers = parsers
         return self._parsers
 
+    def reload_config(self):
+        '''
+        Re-read config from settings
+        '''
+        self._config = None
+        self._parsers = None
+
 
 def process_output(event):
     '''
