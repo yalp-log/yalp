@@ -1,4 +1,5 @@
 # vim: set et ts=4 sw=4 fileencoding=utf-8:
+# pylint: disable=line-too-long
 '''
 yalp.parsers.user_agent
 =======================
@@ -71,6 +72,7 @@ After the parser runs, the vent will become:
         'is_touch_capable': False,
     }
 '''
+# pylint: enable=line-too-long
 import user_agents
 from . import BaseParser
 
