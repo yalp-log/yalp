@@ -43,7 +43,7 @@ With an input event like the following:
         'agent': '"Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"',
     }
 
-After the parser runs, the vent will become:
+After the parser runs, the event will become:
 
 .. code-block:: python
 
