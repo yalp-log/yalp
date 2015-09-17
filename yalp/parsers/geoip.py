@@ -2,6 +2,41 @@
 '''
 yalp.parsers.geoip
 ==================
+
+Extract Geo location data from an IP address.
+
+The parser supports the following configuration items:
+
+.. warning::
+    This parser requires the pygeoip_ package. The pygeoip package
+    uses MaxMind's GeoIP dat files to get geo info from IP addresses.
+    See http://dev.maxmind.com/geoip/legacy/geolite/ for more info.
+
+.. info::
+    The geohash_ package is nessecary for converting latitude/longitude
+    into geohashes. If not installed, the parser will store the raw
+    latitude and longitude.
+
+**geoip_dat**
+    Path to the MaxMind GeoIP City dat file.
+
+*field*
+    The field containing the IP address to parse. If the field is not
+    found in the event, the event will be skipped. Defaults to
+    ``clientip``.
+
+*out_field*
+    The field to set the Geo data to. Defaults to ``geoip``.
+
+*use_hash*
+    Store location as a geohash. Default is ``True``. If set to ``False``
+    location will be stored as ['lat', 'lon'] pair.
+
+*type*
+    A type filter. Events not of this type will be skipped.
+
+.. _pygeoip: https://pypi.python.org/pypi/pygeoip/
+.. _geohash: https://pypi.python.org/pypi/python-geohash
 '''
 try:
     import geohash
