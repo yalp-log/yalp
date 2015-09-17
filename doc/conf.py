@@ -28,6 +28,11 @@ class Mock(object):
 MOCK_MODULES = [
     'yaml',
     'pymongo',
+    'pygeoip',
+    'yalp_grok',
+    'dateutil',
+    'dateutil.parser',
+    'user_agents',
 ]
 
 for mod_name in MOCK_MODULES:
