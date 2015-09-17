@@ -29,6 +29,8 @@ Full List of Parsers
 
 .. toctree::
 
+    yalp.parsers.grok
+    yalp.parsers.geoip
     yalp.parsers.regex
     yalp.parsers.timestamp
     yalp.parsers.user_agent

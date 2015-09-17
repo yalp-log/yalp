@@ -9,6 +9,9 @@ env:
   - TOX_ENV=py27
   - TOX_ENV=py34
   - TOX_ENV=lint
+before_install:
+  - wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+  - gunzip GeoLiteCity.dat.gz
 install:
   - pip install tox coveralls
 script:
