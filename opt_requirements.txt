@@ -1,2 +1,4 @@
 elasticsearch==1.6.0
 pymongo==3.0.3
+pygeoip==0.3.2
+python-geohash==0.8.5
