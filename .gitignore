@@ -13,3 +13,4 @@ coverage.xml
 /*.log
 _build/
 build/
+GeoLiteCity.dat
