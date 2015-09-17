@@ -36,6 +36,17 @@ The parser supports the following configuration items:
 *type*
     A type filter. Events not of this type will be skipped.
 
+
+Example configuration.
+
+.. code-block:: yaml
+
+    parsers:
+      - geoip:
+          field: 'clientip'
+          geoip_dat: '/usr/share/GeoLiteCity.dat'
+
+
 .. _pygeoip: https://pypi.python.org/pypi/pygeoip/
 .. _geohash: https://pypi.python.org/pypi/python-geohash
 '''
