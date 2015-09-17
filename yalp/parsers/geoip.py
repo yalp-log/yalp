@@ -12,7 +12,7 @@ The parser supports the following configuration items:
     uses MaxMind's GeoIP dat files to get geo info from IP addresses.
     See http://dev.maxmind.com/geoip/legacy/geolite/ for more info.
 
-.. info::
+.. note::
     The geohash_ package is nessecary for converting latitude/longitude
     into geohashes. If not installed, the parser will store the raw
     latitude and longitude.
@@ -30,7 +30,8 @@ The parser supports the following configuration items:
 
 *use_hash*
     Store location as a geohash. Default is ``True``. If set to ``False``
-    location will be stored as ['lat', 'lon'] pair.
+    location will be stored as ['lat', 'lon'] pair. Ignored if `geohash`_
+    is not installed.
 
 *type*
     A type filter. Events not of this type will be skipped.
