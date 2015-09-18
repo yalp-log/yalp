@@ -63,7 +63,10 @@ After the parser runs, the event will become:
     }
 
 '''
-import urlparse
+try:
+    from urlparse import urlparse, parse_qs
+except ImportError:
+    from urllib.parse import urlparse, parse_qs
 
 from yalp.parsers import BaseParser
 
@@ -84,8 +87,8 @@ class Parser(BaseParser):
     def parse(self, event):
         if self.field in event:
             url_str = event[self.field]
-            url_parts = urlparse.urlparse(url_str)
-            query_params = urlparse.parse_qs(url_parts.query)
+            url_parts = urlparse(url_str)
+            query_params = parse_qs(url_parts.query)
             event[self.out_field] = {
                 'scheme': url_parts.scheme,
                 'netloc': url_parts.netloc,
