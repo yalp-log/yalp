@@ -66,7 +66,9 @@ After the parser runs, the event will become:
 try:
     from urlparse import urlparse, parse_qs
 except ImportError:
+    # pylint: disable=no-name-in-module,import-error
     from urllib.parse import urlparse, parse_qs
+    # pylint: enable=no-name-in-module,import-error
 
 from yalp.parsers import BaseParser
 
