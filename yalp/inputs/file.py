@@ -36,14 +36,14 @@ from ..config import settings
 from . import BaseInputer
 
 
-class Inputer(BaseInputer):
+class FileInputer(BaseInputer):
     '''
     Get input from a file.
     '''
     line_terminators = ('\r\n', '\n', '\r')
 
     def __init__(self, path, *args, **kwargs):
-        super(Inputer, self).__init__(*args, **kwargs)
+        super(FileInputer, self).__init__(*args, **kwargs)
         self.path = path
         self.sincedb_dir = settings.home or os.environ['HOME']
         self.sincedb = os.path.join(
@@ -124,3 +124,6 @@ class Inputer(BaseInputer):
             event = {'message': line}
             self.enqueue_event(event)
         self._cleanup()
+
+
+Inputer = FileInputer

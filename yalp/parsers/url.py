@@ -73,7 +73,7 @@ except ImportError:
 from yalp.parsers import BaseParser
 
 
-class Parser(BaseParser):
+class UrlParser(BaseParser):
     '''
     Split urls into components.
     '''
@@ -82,7 +82,7 @@ class Parser(BaseParser):
                  out_field='url',
                  *args,
                  **kwargs):
-        super(Parser, self).__init__(*args, **kwargs)
+        super(UrlParser, self).__init__(*args, **kwargs)
         self.field = field
         self.out_field = out_field
 
@@ -104,3 +104,6 @@ class Parser(BaseParser):
                 'port': url_parts.port,
             }
         return event
+
+
+Parser = UrlParser

@@ -128,7 +128,7 @@ TEMPLATE = {
 }
 
 
-class Outputer(BaseOutputer):
+class ElasticSearchOutputer(BaseOutputer):
     '''
     Send output to elasticsearch
     '''
@@ -143,7 +143,7 @@ class Outputer(BaseOutputer):
                  time_stamp_fmt='%Y-%m-%dT%H:%M:%S',
                  *args,
                  **kwargs):
-        super(Outputer, self).__init__(*args, **kwargs)
+        super(ElasticSearchOutputer, self).__init__(*args, **kwargs)
         self.es = Elasticsearch([uri])  # pylint: disable=C0103
         self.index = index
         self.doc_type = doc_type
@@ -201,3 +201,6 @@ class Outputer(BaseOutputer):
             index='_all',
             ignore_unavailable=True,
         )
+
+
+Outputer = ElasticSearchOutputer

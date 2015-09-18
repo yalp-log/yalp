@@ -42,7 +42,7 @@ except ImportError:  # pragma: no cover
 from . import BaseOutputer
 
 
-class Outputer(BaseOutputer):
+class MongoDBOutputer(BaseOutputer):
     '''
     Send output to mongo.
     '''
@@ -52,7 +52,7 @@ class Outputer(BaseOutputer):
                  collection,
                  *args,
                  **kwargs):
-        super(Outputer, self).__init__(*args, **kwargs)
+        super(MongoDBOutputer, self).__init__(*args, **kwargs)
         self.client = pymongo.MongoClient(uri)
         self.database = self.client[database]
         self.collection = self.database[collection]
@@ -63,3 +63,6 @@ class Outputer(BaseOutputer):
     def shutdown(self):
         self.client.fsync()
         self.client.close()
+
+
+Outputer = MongoDBOutputer

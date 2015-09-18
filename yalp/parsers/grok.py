@@ -56,12 +56,12 @@ import yalp_grok as grok
 from . import BaseParser
 
 
-class Parser(BaseParser):
+class GrokParser(BaseParser):
     '''
     Process input with grok pattern match.
     '''
     def __init__(self, field='message', pattern=None, *args, **kwargs):
-        super(Parser, self).__init__(*args, **kwargs)
+        super(GrokParser, self).__init__(*args, **kwargs)
         self.pattern = pattern
         self.field = field
         self.compiled_pattern = grok.compile_pattern(self.pattern)
@@ -71,3 +71,6 @@ class Parser(BaseParser):
         if matches:
             event.update(matches)
         return event
+
+
+Parser = GrokParser

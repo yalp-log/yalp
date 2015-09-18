@@ -40,7 +40,7 @@ from . import BaseParser
 DEFAULT_DATE_FMT = '%Y-%m-%dT%H:%M:%S'
 
 
-class Parser(BaseParser):
+class TimeStampParser(BaseParser):
     '''
     Search for datetime string and set time_stamp.
     '''
@@ -50,7 +50,7 @@ class Parser(BaseParser):
                  timestamp_fmt=DEFAULT_DATE_FMT,
                  *args,
                  **kwargs):
-        super(Parser, self).__init__(*args, **kwargs)
+        super(TimeStampParser, self).__init__(*args, **kwargs)
         self.field = field
         self.out_field = out_field
         self.timestamp_fmt = timestamp_fmt
@@ -62,3 +62,6 @@ class Parser(BaseParser):
                 fuzzy=True
             ).strftime(self.timestamp_fmt)
         return event
+
+
+Parser = TimeStampParser
