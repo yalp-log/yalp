@@ -27,6 +27,41 @@ Example configuration.
       - url:
           field: 'request'
 
+With an input event like the following:
+
+.. code-block:: python
+
+    {
+        'hostname': 'server_hostname',
+        'time_stamp': '2015-01-01T01:00:00',
+        'request': '/index.html?param1=val1&param2=val2',
+    }
+
+After the parser runs, the event will become:
+
+.. code-block:: python
+
+    {
+        'hostname': 'server_hostname',
+        'time_stamp': '2015-01-01T01:00:00',
+        'request': '/index.html?param1=val1&param2=val2',
+        'url': {
+            'fragment': '',
+            'hostname': None,
+            'netloc': '',
+            'params': '',
+            'password': None,
+            'path': '/index.html',
+            'port': None,
+            'query': {
+                'param1': ['val1'],
+                'param2': ['val2'],
+            },
+            'scheme': '',
+            'username': None
+        },
+    }
+
 '''
 import urlparse
 
