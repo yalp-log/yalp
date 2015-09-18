@@ -79,7 +79,7 @@ import user_agents
 from . import BaseParser
 
 
-class Parser(BaseParser):
+class UserAgentParser(BaseParser):
     '''
     Extract OS and Broswer info from user agent string
     '''
@@ -88,7 +88,7 @@ class Parser(BaseParser):
                  out_field=None,
                  *args,
                  **kwargs):
-        super(Parser, self).__init__(*args, **kwargs)
+        super(UserAgentParser, self).__init__(*args, **kwargs)
         self.field = field
         self.out_field = out_field
 
@@ -121,3 +121,6 @@ class Parser(BaseParser):
             else:
                 event.update(ua_data)
         return event
+
+
+Parser = UserAgentParser

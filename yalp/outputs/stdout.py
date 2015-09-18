@@ -10,12 +10,12 @@ import json
 from . import BaseOutputer
 
 
-class Outputer(BaseOutputer):
+class StdOutOutputer(BaseOutputer):
     '''
     Print output
     '''
     def __init__(self, out=sys.stdout, *args, **kwargs):
-        super(Outputer, self).__init__(*args, **kwargs)
+        super(StdOutOutputer, self).__init__(*args, **kwargs)
         self.out = out
 
     def output(self, event):
@@ -23,3 +23,6 @@ class Outputer(BaseOutputer):
 
     def shutdown(self):
         pass
+
+
+Outputer = StdOutOutputer

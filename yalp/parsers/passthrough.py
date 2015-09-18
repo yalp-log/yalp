@@ -6,12 +6,15 @@ yalp.parsers.passthrough
 from . import BaseParser
 
 
-class Parser(BaseParser):
+class PassThroughParser(BaseParser):
     '''
     Print input
     '''
     def __init__(self, *args, **kwargs):
-        super(Parser, self).__init__(*args, **kwargs)
+        super(PassThroughParser, self).__init__(*args, **kwargs)
 
     def parse(self, event):
         return event
+
+
+Parser = PassThroughParser

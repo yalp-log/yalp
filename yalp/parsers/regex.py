@@ -32,12 +32,12 @@ import re
 from . import BaseParser
 
 
-class Parser(BaseParser):
+class RegexParser(BaseParser):
     '''
     Process input with regex.
     '''
     def __init__(self, regex=None, *args, **kwargs):
-        super(Parser, self).__init__(*args, **kwargs)
+        super(RegexParser, self).__init__(*args, **kwargs)
         self.regex = regex
 
     def parse(self, event):
@@ -46,3 +46,6 @@ class Parser(BaseParser):
         if match:
             event.update(match.groupdict())
         return event
+
+
+Parser = RegexParser

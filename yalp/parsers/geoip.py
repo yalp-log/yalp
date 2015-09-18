@@ -76,7 +76,7 @@ def _loc_point(geo_info):
     ]
 
 
-class Parser(BaseParser):
+class GeoIPParser(BaseParser):
     '''
     Get geo info from IP address.
     '''
@@ -87,7 +87,7 @@ class Parser(BaseParser):
                  use_hash=True,
                  *args,
                  **kwargs):
-        super(Parser, self).__init__(*args, **kwargs)
+        super(GeoIPParser, self).__init__(*args, **kwargs)
         self.field = field
         self.out_field = out_field
         self.get_loc = _loc_geohash if HAS_GEOHASH and use_hash else _loc_point
@@ -108,3 +108,6 @@ class Parser(BaseParser):
             except (IndexError, TypeError):
                 self.logger.warn('Failed to get Geo info from ip: %s', ip_addr)
         return event
+
+
+Parser = GeoIPParser

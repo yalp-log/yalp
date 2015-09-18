@@ -27,12 +27,12 @@ import json
 from . import BaseOutputer
 
 
-class Outputer(BaseOutputer):
+class FileOutputer(BaseOutputer):
     '''
     Write output to a file.
     '''
     def __init__(self, path=None, *args, **kwargs):
-        super(Outputer, self).__init__(*args, **kwargs)
+        super(FileOutputer, self).__init__(*args, **kwargs)
         self.path = path
         self.outfile = open(self.path, 'a')
 
@@ -42,3 +42,6 @@ class Outputer(BaseOutputer):
     def shutdown(self):
         self.outfile.flush()
         self.outfile.close()
+
+
+Outputer = FileOutputer

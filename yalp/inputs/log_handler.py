@@ -18,7 +18,7 @@ For example, in another Python project:
         'handlers': {
             'yalp': {
                 'level': 'INFO',
-                'class': 'yalp.inputs.log_handler.Inputer',
+                'class': 'yalp.inputs.log_handler.YalpHandler',
                 'type': 'my_package_logs',
                 'pipeline': {
                     'broker_url': 'amqp://guest@guest@localhost:5672//',
@@ -98,7 +98,7 @@ RESEVERD = frozenset((
 ))
 
 
-class Inputer(logging.Handler, InputerMixin, object):
+class YalpHandler(logging.Handler, InputerMixin, object):
     '''
     Get input from python logging
     '''
@@ -136,3 +136,6 @@ class Inputer(logging.Handler, InputerMixin, object):
         })
 
         self.enqueue_event(event)
+
+
+Inputer = YalpHandler
