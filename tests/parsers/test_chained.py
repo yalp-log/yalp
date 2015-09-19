@@ -63,7 +63,6 @@ class TestLongChain(unittest.TestCase):
     Test that the parser task chains completely.
     '''
     def setUp(self):
-        self.maxDiff = None
         self.test_dat_file = os.path.abspath(os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
             'GeoLiteCity.dat',
