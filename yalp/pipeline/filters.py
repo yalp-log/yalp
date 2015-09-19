@@ -15,7 +15,6 @@ def _event_has_field(fields, event):
 
 def _event_not_has_field(fields, event):
     ''' Check if event does not have field '''
-    print fields
     for field in fields:
         if field in event:
             return False
