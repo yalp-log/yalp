@@ -111,9 +111,8 @@ Next is the ``inputs`` section.
 
     # Input configuration
     inputs:
-      - 'file':
-          path: '/var/log/messages'
-          type: messages
+      - file:
+          path: '/var/log/nginx/access.log'
 
 This section contains a list of inputs to monitor for events. This example is
 set to monitor ``/var/log/messages``. The ``type`` option limits what parsers
@@ -128,11 +127,11 @@ same ``type`` will process the message. The general format is as follows.
 .. code-block:: yaml
 
     inputs:
-      - '<module>':
+      - <module>:
           <option>: <value>
           ...
           <option>: <value>
-      - '<module>':
+      - <module>:
           <option>: <value>
           ...
           <option>: <value>
@@ -144,14 +143,12 @@ configuring the ``parsers`` and ``outputs``.
 .. code-block:: yaml
 
     parsers:
-      - 'passthrough':
-          type: messages
+      - grok:
+          pattern: '%{COMBINEDAPACHELOG}'
 
     outputs:
-      - 'mongo':
-          uri: 'mongodb://localhost:27017/yalp'
-          database: yalp
-          collection: logs
+      - elasticsearch:
+          uri: http://localhost:9200
 
 
 This configures the parsers to pass the message to the outpers without modifing

@@ -43,7 +43,7 @@ Brief install guide:
 
 .. code-block:: bash
 
-    $ sudo apt-get install rabbitmq-server mongodb
+    $ sudo apt-get install rabbitmq-server
     $ virtualenv /srv/yalp_env
     $ source /srv/yalp_env/bin/activate
     (yalp_env) $ pip install yalp
@@ -55,17 +55,23 @@ Brief install guide:
     # Celery configuration
     broker_url: amqp://guest:guest@localhost:5672//
     inputs:
-      - 'file':
-          path: '/var/log/syslog'
-          type: messages
+      - file:
+          path: '/var/log/nginx/access.log'
     parsers:
-      - 'passthrough':
-          type: messages
+      - grok:
+          pattern: '%{COMBINEDAPACHELOG}'
+      - timestamp:
+          field: timestamp
+      - goip:
+          field: clientip
+          geoip_dat: /usr/share/GeoLiteCity.dat
+      - user_agent:
+          field: agent
+      - url:
+          field: request
     outputs:
-      - 'mongo':
-          uri: 'mongodb://localhost:27017/yalp'
-          database: yalp
-          collection: logs
+      - elasticsearch:
+          uri: http://localhost:9200
 
 .. code-block:: bash
 
