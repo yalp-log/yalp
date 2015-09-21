@@ -11,8 +11,8 @@ This outputer supports the following configuration items:
 
 *uri*
     The elasticsearch connection uri Formatted as
-    ``http[s]://[user:password@]<host>[:port]/[path]``. Default to
-    ``http://localhost:9200/``.
+    ``http[s]://[user:password@]<host>[:port]/[path]``. Can also be a
+    list of connection uris. Defaults to ``http://localhost:9200/``.
 
 *index*
     The index name to store the documents. Default to
@@ -144,7 +144,15 @@ class ElasticSearchOutputer(BaseOutputer):
                  *args,
                  **kwargs):
         super(ElasticSearchOutputer, self).__init__(*args, **kwargs)
-        self.es = Elasticsearch([uri])  # pylint: disable=C0103
+        sniff_settings = True
+        if not isinstance(uri, list):
+            sniff_settings = False
+            uri = [uri]
+        self.es = Elasticsearch(
+            uri,
+            sniff_on_start=sniff_settings,
+            sniff_on_connection_fail=sniff_settings,
+        )
         self.index = index
         self.doc_type = doc_type
         self.time_based = time_based
