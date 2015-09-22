@@ -28,7 +28,7 @@ class CeleryPipeline(BasePipline):
         '''
         Execute this pipeline component with the event.
         '''
-        if self.type_ != event.get('type', None):
+        if event is None or self.type_ != event.get('type', None):
             self.logger.info('%s skipping event %s: not same type',
                              self.__class__.__name__,
                              event)
