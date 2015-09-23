@@ -42,6 +42,10 @@ This outputer supports the following configuration items:
     Allow yalp to write over any existing template. Default to
     ``False``.
 
+*buffer_size*
+    The outputer will buffer this many events before sending them all to
+    elasticsearch via a bulk insert. Default is ``500``.
+
 *type*
     A type filter. Only output events of this type.
 
@@ -63,7 +67,8 @@ from datetime import datetime
 
 try:
     from elasticsearch import Elasticsearch
-    from elasticsearch.exceptions import ElasticsearchException
+    from elasticsearch.exceptions import TransportError
+    from elasticsearch.helpers import bulk, BulkIndexError
 except ImportError:  # pragma: no cover
     pass
 from ..exceptions import OutputException
@@ -141,6 +146,7 @@ class ElasticSearchOutputer(BaseOutputer):
                  template_overwrite=False,
                  time_based=True,
                  time_stamp_fmt='%Y-%m-%dT%H:%M:%S',
+                 buffer_size=500,
                  *args,
                  **kwargs):
         super(ElasticSearchOutputer, self).__init__(*args, **kwargs)
@@ -166,6 +172,8 @@ class ElasticSearchOutputer(BaseOutputer):
             )
         if not self.time_based:
             self.es.indices.create(index=self.index, ignore=400)
+        self.buffer_size = buffer_size
+        self.buffer = []
 
     def get_index(self, event):
         '''
@@ -192,19 +200,33 @@ class ElasticSearchOutputer(BaseOutputer):
         else:
             return self.index
 
+    def _flush_buffer(self):
+        ''' Write out events to elasticsearch '''
+        try:
+            try:
+                bulk(self.es, self.buffer)
+            except BulkIndexError as exc:
+                self.logger.error(
+                    'Failed to insert some events: %s',
+                    exc.errors)
+            self.buffer = []
+        except TransportError:
+            self.logger.warn('Error connection to elasticsearch. Will retry.')
+
     def output(self, event):
         try:
-            self.es.create(
-                index=self.get_index(event),
-                doc_type=self.doc_type,
-                body=event,
-            )
-        except ElasticsearchException:
-            self.logger.error('Error processing output', exc_info=True)
+            self.buffer.append({
+                '_type': self.doc_type,
+                '_index': self.get_index(event),
+                '_source': event
+            })
         except OutputException:
             self.logger.error('Output exception', exc_info=True)
+        if len(self.buffer) >= self.buffer_size:
+            self._flush_buffer()
 
     def shutdown(self):
+        self._flush_buffer()
         self.es.indices.flush(
             index='_all',
             ignore_unavailable=True,

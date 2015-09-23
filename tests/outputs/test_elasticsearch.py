@@ -131,3 +131,67 @@ class TestElasticsearchOutput(unittest.TestCase):
         outputer.run(event)
         outputer.shutdown()
         self.assertFalse(self.es.indices.exists(index=self.index))
+
+    def test_bulk_invalid_format(self):
+        event = {
+            'host': 'localhost',
+            'message': 'test message',
+            'blah': [0, 1],
+            'time_stamp': '2015-01-01T00:00:00',
+        }
+        outputer = elasticsearch.Outputer(
+            uri=self.config['uri'],
+            index=self.config['index'],
+            doc_type=self.config['doc_type'],
+            template_overwrite=True,
+        )
+        outputer.run(event)
+        outputer.shutdown()
+        event2 = {
+            'host': 'localhost',
+            'message': 'test message',
+            'blah': {
+                'nums': [2, 3],
+            },
+            'time_stamp': '2015-01-01T00:00:00',
+        }
+        outputer = elasticsearch.Outputer(
+            uri=self.config['uri'],
+            index=self.config['index'],
+            doc_type=self.config['doc_type'],
+            template_overwrite=True,
+        )
+        outputer.run(event2)
+        outputer.shutdown()
+        count = self.es.count(self.index, self.doc_type).get('count')
+        self.assertEqual(count, 1)
+
+    def test_buffer_size(self):
+        events = [
+            {
+                'host': 'localhost',
+                'message': 'test message',
+                'time_stamp': '2015-01-01T00:00:00',
+            },
+            {
+                'host': 'localhost',
+                'message': 'test message',
+                'time_stamp': '2015-01-01T00:00:02',
+            },
+        ]
+        outputer = elasticsearch.Outputer(
+            uri=self.config['uri'],
+            index=self.config['index'],
+            doc_type=self.config['doc_type'],
+            template_overwrite=True,
+            buffer_size=2,
+        )
+        for event in events:
+            outputer.run(event)
+        self.es.indices.flush(
+            index='_all',
+            ignore_unavailable=True,
+        )
+        count = self.es.count(self.index, self.doc_type).get('count')
+        outputer.shutdown()
+        self.assertEqual(count, 2)
