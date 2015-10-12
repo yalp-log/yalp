@@ -19,6 +19,9 @@ The parser supports the following configuration items:
     The `date format`_ string to format the time stamp. Defaults to
     ``%Y-%m-%dT$H:%M:%S``.
 
+*to_utc*
+    Convert the timestamp to UTC after parsing. Defaults to ``True``.
+
 *type*
     A type filter. Events not of this type will be skipped.
 
@@ -33,11 +36,13 @@ Examaple configuration.
 
 .. _date format: https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
 '''
+from dateutil import tz
 from dateutil.parser import parse as dt_parse
 
 from . import BaseParser
 
 DEFAULT_DATE_FMT = '%Y-%m-%dT%H:%M:%S'
+UTC = tz.tzutc()
 
 
 class TimeStampParser(BaseParser):
@@ -48,19 +53,26 @@ class TimeStampParser(BaseParser):
                  field,
                  out_field='time_stamp',
                  timestamp_fmt=DEFAULT_DATE_FMT,
+                 to_utc=True,
                  *args,
                  **kwargs):
         super(TimeStampParser, self).__init__(*args, **kwargs)
         self.field = field
         self.out_field = out_field
         self.timestamp_fmt = timestamp_fmt
+        self.to_utc = to_utc
 
     def parse(self, event):
         if self.field in event:
-            event[self.out_field] = dt_parse(  # pylint: disable=no-member
-                event[self.field],
-                fuzzy=True
-            ).strftime(self.timestamp_fmt)
+            parsed_dt = dt_parse(event[self.field], fuzzy=True)
+            # pylint: disable=no-member
+            if self.to_utc:
+                try:
+                    parsed_dt = parsed_dt.astimezone(UTC)
+                except ValueError:
+                    self.logger.info('Failed to convert to UTC')
+            event[self.out_field] = parsed_dt.strftime(self.timestamp_fmt)
+            # pylint: enable=no-member
         return event
 
 

@@ -19,6 +19,24 @@ class TestTimestampParser(unittest.TestCase):
             'date_field': u'13/Mar/2014:13:46:00 -0400',
             'time_stamp': '2015-01-01T00:00:00',
         }
+        parser = timestamp.Parser(field='date_field', to_utc=False)
+        parsed_event = parser.run(event)
+        self.assertEqual('2014-03-13T13:46:00', parsed_event['time_stamp'])
+
+    def test_timezone(self):
+        event = {
+            'host': 'localhost',
+            'date_field': u'13/Mar/2014:13:46:00 -0400',
+        }
+        parser = timestamp.Parser(field='date_field')
+        parsed_event = parser.run(event)
+        self.assertEqual('2014-03-13T17:46:00', parsed_event['time_stamp'])
+
+    def test_timezone_no_tz_info(self):
+        event = {
+            'host': 'localhost',
+            'date_field': u'13/Mar/2014:13:46:00',
+        }
         parser = timestamp.Parser(field='date_field')
         parsed_event = parser.run(event)
         self.assertEqual('2014-03-13T13:46:00', parsed_event['time_stamp'])
