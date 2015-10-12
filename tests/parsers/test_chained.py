@@ -39,7 +39,7 @@ class TestChainedParsers(unittest.TestCase):
         }
         expected = {
             'message': '127.0.0.1 - - [15/Sep/2015:13:41:35 -0400] "GET /index.html HTTP/1.1" 200 352 "-" "Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"',
-            'time_stamp': '2015-09-15T13:41:35',
+            'time_stamp': '2015-09-15T17:41:35',
             'hostname': 'server_hostname',
             'clientip': '127.0.0.1',
             'ident': '-',
@@ -93,7 +93,7 @@ class TestLongChain(unittest.TestCase):
         }
         expected = {
             'message': '8.8.4.4 - - [15/Sep/2015:13:41:35 -0400] "GET /index.html?param=val HTTP/1.1" 200 352 "-" "Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"',
-            'time_stamp': '2015-09-15T13:41:35',
+            'time_stamp': '2015-09-15T17:41:35',
             'hostname': 'server_hostname',
             'clientip': '8.8.4.4',
             'ident': '-',
