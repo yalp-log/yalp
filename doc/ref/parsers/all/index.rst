@@ -33,5 +33,6 @@ Full List of Parsers
     yalp.parsers.geoip
     yalp.parsers.regex
     yalp.parsers.timestamp
+    yalp.parsers.transform
     yalp.parsers.user_agent
     yalp.parsers.url

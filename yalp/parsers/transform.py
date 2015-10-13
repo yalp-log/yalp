@@ -7,13 +7,20 @@ Used to convert a field in the event to a different built-in type.
 
 The parser supports the following configuration items:
 
+..note::
+    If the field fails to be transformed, The parser will log an error
+    and leave the field as it was originally.
+
 **field**
     The field to convert. If the field is not found in the event, the
     event will be skipped.
 
 **to**
-    The built-in type to cast to. Valid values are: ``int``, ``float``,
-    ``str``.
+    Convert the field into this type. Supported types are::
+
+        int
+        float
+        str
 
 *type*
     A type filter. Events not of this type will be skipped.
@@ -71,3 +78,7 @@ class TransformParser(BaseParser):
                 self.logger.error('Failed to transform field %s to %s',
                                   self.field,
                                   self.to)
+        return event
+
+
+Parser = TransformParser
