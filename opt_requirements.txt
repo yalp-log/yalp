@@ -1,4 +1,4 @@
-elasticsearch==1.6.0
-pymongo==3.0.3
+elasticsearch==2.1.0
+pymongo==3.1
 pygeoip==0.3.2
 python-geohash==0.8.5

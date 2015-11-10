@@ -1,6 +1,6 @@
 PyYAML==3.11
-celery==3.1.18
+celery==3.1.19
 python-dateutil==2.4.2
 yalp_grok==0.2
 user-agents==1.0.1
-ua-parser==0.4.1
+ua-parser==0.5.0
