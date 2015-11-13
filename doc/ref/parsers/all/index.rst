@@ -31,6 +31,7 @@ Full List of Parsers
 
     yalp.parsers.grok
     yalp.parsers.geoip
+    yalp.parsers.keyvalue
     yalp.parsers.regex
     yalp.parsers.timestamp
     yalp.parsers.transform
