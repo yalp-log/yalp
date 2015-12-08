@@ -76,10 +76,10 @@ After the parser runs, the event will become:
 '''
 # pylint: enable=line-too-long
 import user_agents
-from . import BaseParser
+from . import ExtractFieldParser
 
 
-class UserAgentParser(BaseParser):
+class UserAgentParser(ExtractFieldParser):
     '''
     Extract OS and Broswer info from user agent string
     '''
@@ -88,38 +88,36 @@ class UserAgentParser(BaseParser):
                  out_field=None,
                  *args,
                  **kwargs):
-        super(UserAgentParser, self).__init__(*args, **kwargs)
-        self.field = field
+        super(UserAgentParser, self).__init__(field, *args, **kwargs)
         self.out_field = out_field
 
     def parse(self, event):
-        if self.field in event:
-            ua_str = event[self.field]
-            ua = user_agents.parse(ua_str)
-            ua_data = {
-                'browser': {
-                    'family': ua.browser.family,
-                    'version': ua.browser.version_string,
-                },
-                'os': {
-                    'family': ua.os.family,
-                    'version': ua.os.version_string,
-                },
-                'device': {
-                    'family': ua.device.family,
-                    'brand': ua.device.brand,
-                    'model': ua.device.model,
-                },
-                'is_mobile': ua.is_mobile,
-                'is_tablet': ua.is_tablet,
-                'is_touch_capable': ua.is_touch_capable,
-                'is_pc': ua.is_pc,
-                'is_bot': ua.is_bot,
-            }
-            if self.out_field:
-                event[self.out_field] = ua_data
-            else:
-                event.update(ua_data)
+        ua_str = self.data
+        ua = user_agents.parse(ua_str)
+        ua_data = {
+            'browser': {
+                'family': ua.browser.family,
+                'version': ua.browser.version_string,
+            },
+            'os': {
+                'family': ua.os.family,
+                'version': ua.os.version_string,
+            },
+            'device': {
+                'family': ua.device.family,
+                'brand': ua.device.brand,
+                'model': ua.device.model,
+            },
+            'is_mobile': ua.is_mobile,
+            'is_tablet': ua.is_tablet,
+            'is_touch_capable': ua.is_touch_capable,
+            'is_pc': ua.is_pc,
+            'is_bot': ua.is_bot,
+        }
+        if self.out_field:
+            event[self.out_field] = ua_data
+        else:
+            event.update(ua_data)
         return event
 
 

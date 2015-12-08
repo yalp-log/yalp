@@ -57,7 +57,7 @@ except ImportError:
     HAS_GEOHASH = False
 
 from pygeoip import GeoIP, GeoIPError
-from . import BaseParser
+from . import ExtractFieldParser
 
 
 def _loc_geohash(geo_info):
@@ -76,7 +76,7 @@ def _loc_point(geo_info):
     ]
 
 
-class GeoIPParser(BaseParser):
+class GeoIPParser(ExtractFieldParser):
     '''
     Get geo info from IP address.
     '''
@@ -87,8 +87,7 @@ class GeoIPParser(BaseParser):
                  use_hash=True,
                  *args,
                  **kwargs):
-        super(GeoIPParser, self).__init__(*args, **kwargs)
-        self.field = field
+        super(GeoIPParser, self).__init__(field, *args, **kwargs)
         self.out_field = out_field
         self.get_loc = _loc_geohash if HAS_GEOHASH and use_hash else _loc_point
         try:
@@ -98,15 +97,14 @@ class GeoIPParser(BaseParser):
             raise exc
 
     def parse(self, event):
-        if self.field in event:
-            ip_addr = event[self.field]
-            try:
-                geo_info = self.geoip.record_by_addr(ip_addr)
-                if 'latitude' in geo_info and 'longitude' in geo_info:
-                    geo_info['location'] = self.get_loc(geo_info)
-                event[self.out_field] = geo_info
-            except (IndexError, TypeError):
-                self.logger.warn('Failed to get Geo info from ip: %s', ip_addr)
+        ip_addr = self.data
+        try:
+            geo_info = self.geoip.record_by_addr(ip_addr)
+            if 'latitude' in geo_info and 'longitude' in geo_info:
+                geo_info['location'] = self.get_loc(geo_info)
+            event[self.out_field] = geo_info
+        except (IndexError, TypeError):
+            self.logger.warn('Failed to get Geo info from ip: %s', ip_addr)
         return event
 
 

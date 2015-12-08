@@ -56,3 +56,29 @@ def get_hostname():
     hostname = socket.gethostname()
     del socket
     return hostname
+
+
+def nested_get(data, lookup, default=KeyError):
+    '''
+    Preform a nested dict lookup.
+    '''
+    for key in lookup.split(':'):
+        try:
+            data = data[key]
+        except (KeyError, TypeError) as exc:
+            if default is KeyError:
+                raise exc
+            return default
+    return data
+
+
+def nested_put(data, lookup, value):
+    '''
+    Update a field in a nested dict.
+    '''
+    try:
+        initial_keys, last_key = lookup.rsplit(':', 1)
+        data = nested_get(data, initial_keys)
+    except ValueError:
+        last_key = lookup
+    data[last_key] = value

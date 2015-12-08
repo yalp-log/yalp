@@ -35,7 +35,8 @@ Example configuration.
           field: response_time
           to: int
 '''
-from . import BaseParser
+from ..utils import nested_put
+from . import ExtractFieldParser
 
 
 def _to_int(field):
@@ -60,24 +61,24 @@ TRANSFORM_MAP = {
 }
 
 
-class TransformParser(BaseParser):
+class TransformParser(ExtractFieldParser):
     '''
     Transform fields into new field types.
     '''
     def __init__(self, field, to, *args, **kwargs):
-        super(TransformParser, self).__init__(*args, **kwargs)
-        self.field = field
+        super(TransformParser, self).__init__(field, *args, **kwargs)
         self.to = to
         self.to_func = TRANSFORM_MAP[self.to]
 
     def parse(self, event):
-        if self.field in event:
-            try:
-                event[self.field] = self.to_func(event[self.field])
-            except ValueError:
-                self.logger.error('Failed to transform field %s to %s',
-                                  self.field,
-                                  self.to)
+        try:
+            transformed = self.to_func(self.data)
+        except ValueError:
+            transformed = self.data
+            self.logger.error('Failed to transform field %s to %s',
+                              self.field,
+                              self.to)
+        nested_put(event, self.field, transformed)
         return event
 
 

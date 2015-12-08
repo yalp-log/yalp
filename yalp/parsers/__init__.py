@@ -4,6 +4,8 @@ yalp.parsers
 ============
 '''
 import logging
+
+from ..utils import nested_get
 from ..pipeline import CeleryPipeline
 
 
@@ -23,3 +25,21 @@ class BaseParser(CeleryPipeline):
         Parse the message and return event with parsed result.
         '''
         raise NotImplementedError
+
+
+class ExtractFieldParser(BaseParser):
+    '''
+    Extracts a field from the event for parsing.
+
+    If the field is not in the event, the event is not parsed.
+    '''
+    def __init__(self, field='message', *args, **kwargs):
+        super(ExtractFieldParser, self).__init__(*args, **kwargs)
+        self.field = field
+
+    def process_event(self, event):
+        try:
+            self.data = nested_get(event, self.field)
+            return super(ExtractFieldParser, self).process_event(event)
+        except KeyError:
+            return event

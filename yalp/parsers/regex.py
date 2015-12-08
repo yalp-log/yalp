@@ -29,10 +29,10 @@ Example configuration.
 
 '''
 import re
-from . import BaseParser
+from . import ExtractFieldParser
 
 
-class RegexParser(BaseParser):
+class RegexParser(ExtractFieldParser):
     '''
     Process input with regex.
     '''
@@ -41,7 +41,7 @@ class RegexParser(BaseParser):
         self.regex = regex
 
     def parse(self, event):
-        message = event.pop('message')
+        message = self.data
         match = re.match(self.regex, message)
         if match:
             event.update(match.groupdict())

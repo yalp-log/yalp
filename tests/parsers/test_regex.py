@@ -27,6 +27,7 @@ class TestRegexParser(unittest.TestCase):
                 'month': 'Dec',
                 'day': '10',
                 'time_stamp': '2015-01-01T00:00:00',
+                'message': 'Dec 10 an event',
             }
         )
 
