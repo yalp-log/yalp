@@ -53,21 +53,20 @@ After the parser runs, the event will become:
 .. _grok: https://www.elastic.co/guide/en/logstash/current/plugins-filters-grok.html#plugins-filters-grok
 '''
 import yalp_grok as grok
-from . import BaseParser
+from . import ExtractFieldParser
 
 
-class GrokParser(BaseParser):
+class GrokParser(ExtractFieldParser):
     '''
     Process input with grok pattern match.
     '''
     def __init__(self, field='message', pattern=None, *args, **kwargs):
-        super(GrokParser, self).__init__(*args, **kwargs)
+        super(GrokParser, self).__init__(field, *args, **kwargs)
         self.pattern = pattern
-        self.field = field
         self.compiled_pattern = grok.compile_pattern(self.pattern)
 
     def parse(self, event):
-        matches = grok.grok_search(event[self.field], self.compiled_pattern)
+        matches = grok.grok_search(self.data, self.compiled_pattern)
         if matches:
             event.update(matches)
         return event

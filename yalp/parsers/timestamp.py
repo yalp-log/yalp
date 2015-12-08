@@ -39,40 +39,38 @@ Examaple configuration.
 from dateutil import tz
 from dateutil.parser import parse as dt_parse
 
-from . import BaseParser
+from . import ExtractFieldParser
 
 DEFAULT_DATE_FMT = '%Y-%m-%dT%H:%M:%S'
 UTC = tz.tzutc()
 
 
-class TimeStampParser(BaseParser):
+class TimeStampParser(ExtractFieldParser):
     '''
     Search for datetime string and set time_stamp.
     '''
     def __init__(self,
-                 field,
+                 field='timestamp',
                  out_field='time_stamp',
                  timestamp_fmt=DEFAULT_DATE_FMT,
                  to_utc=True,
                  *args,
                  **kwargs):
-        super(TimeStampParser, self).__init__(*args, **kwargs)
-        self.field = field
+        super(TimeStampParser, self).__init__(field, *args, **kwargs)
         self.out_field = out_field
         self.timestamp_fmt = timestamp_fmt
         self.to_utc = to_utc
 
     def parse(self, event):
-        if self.field in event:
-            parsed_dt = dt_parse(event[self.field], fuzzy=True)
-            # pylint: disable=no-member
-            if self.to_utc:
-                try:
-                    parsed_dt = parsed_dt.astimezone(UTC)
-                except ValueError:
-                    self.logger.info('Failed to convert to UTC')
-            event[self.out_field] = parsed_dt.strftime(self.timestamp_fmt)
-            # pylint: enable=no-member
+        parsed_dt = dt_parse(self.data, fuzzy=True)
+        # pylint: disable=no-member
+        if self.to_utc:
+            try:
+                parsed_dt = parsed_dt.astimezone(UTC)
+            except ValueError:
+                self.logger.info('Failed to convert to UTC')
+        event[self.out_field] = parsed_dt.strftime(self.timestamp_fmt)
+        # pylint: enable=no-member
         return event
 
 

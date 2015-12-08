@@ -23,10 +23,10 @@ The parser supports the following configuration items:
 *type*
     A type filter. Events not of this type will be skipped.
 '''
-from . import BaseParser
+from . import ExtractFieldParser
 
 
-class KeyValueParser(BaseParser):
+class KeyValueParser(ExtractFieldParser):
     '''
     Extract key value data.
     '''
@@ -37,23 +37,21 @@ class KeyValueParser(BaseParser):
                  pair_sep=' ',
                  *args,
                  **kwargs):
-        super(KeyValueParser, self).__init__(*args, **kwargs)
-        self.field = field
+        super(KeyValueParser, self).__init__(field, *args, **kwargs)
         self.out_field = out_field
         self.sep = sep
         self.pair_sep = pair_sep
 
     def parse(self, event):
-        if self.field in event:
-            pairs = event[self.field].split(self.pair_sep)
-            keyvalues = {}
-            for pair in pairs:
-                key, value = pair.split(self.sep, 1)
-                keyvalues[key] = value
-            if self.out_field:
-                event[self.out_field] = keyvalues
-            else:
-                event.update(keyvalues)
+        pairs = self.data.split(self.pair_sep)  # pylint: disable=no-member
+        keyvalues = {}
+        for pair in pairs:
+            key, value = pair.split(self.sep, 1)
+            keyvalues[key] = value
+        if self.out_field:
+            event[self.out_field] = keyvalues
+        else:
+            event.update(keyvalues)
         return event
 
 

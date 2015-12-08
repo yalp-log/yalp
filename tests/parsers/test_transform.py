@@ -46,3 +46,14 @@ class TestTransformParser(unittest.TestCase):
         parsed_event = parser.run(event)
         self.assertIsInstance(parsed_event['str_field'], str)
         self.assertEqual('abcd', parsed_event['str_field'])
+
+    def test_nested_int(self):
+        event = {
+            'nested': {
+                'num_field': '200',
+            }
+        }
+        parser = transform.Parser(field='nested:num_field', to='int')
+        parsed_event = parser.run(event)
+        self.assertIsInstance(parsed_event['nested']['num_field'], int)
+        self.assertEqual(200, parsed_event['nested']['num_field'])

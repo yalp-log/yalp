@@ -70,10 +70,10 @@ except ImportError:
     from urllib.parse import urlparse, parse_qs
     # pylint: enable=no-name-in-module,import-error
 
-from yalp.parsers import BaseParser
+from yalp.parsers import ExtractFieldParser
 
 
-class UrlParser(BaseParser):
+class UrlParser(ExtractFieldParser):
     '''
     Split urls into components.
     '''
@@ -82,27 +82,25 @@ class UrlParser(BaseParser):
                  out_field='url',
                  *args,
                  **kwargs):
-        super(UrlParser, self).__init__(*args, **kwargs)
-        self.field = field
+        super(UrlParser, self).__init__(field, *args, **kwargs)
         self.out_field = out_field
 
     def parse(self, event):
-        if self.field in event:
-            url_str = event[self.field]
-            url_parts = urlparse(url_str)
-            query_params = parse_qs(url_parts.query)
-            event[self.out_field] = {
-                'scheme': url_parts.scheme,
-                'netloc': url_parts.netloc,
-                'path': url_parts.path,
-                'params': url_parts.params,
-                'query': query_params,
-                'fragment': url_parts.fragment,
-                'username': url_parts.username,
-                'password': url_parts.password,
-                'hostname': url_parts.hostname,
-                'port': url_parts.port,
-            }
+        url_str = self.data
+        url_parts = urlparse(url_str)
+        query_params = parse_qs(url_parts.query)
+        event[self.out_field] = {
+            'scheme': url_parts.scheme,
+            'netloc': url_parts.netloc,
+            'path': url_parts.path,
+            'params': url_parts.params,
+            'query': query_params,
+            'fragment': url_parts.fragment,
+            'username': url_parts.username,
+            'password': url_parts.password,
+            'hostname': url_parts.hostname,
+            'port': url_parts.port,
+        }
         return event
 
 

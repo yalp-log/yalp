@@ -6,9 +6,8 @@ yalp.config
 from __future__ import print_function
 
 import os
-import yaml
-
 from logging.config import dictConfig
+import yaml
 
 
 EMPTY = object()

@@ -19,10 +19,10 @@ The parser supports the following configuration items:
 '''
 from __future__ import absolute_import
 import json
-from . import BaseParser
+from . import ExtractFieldParser
 
 
-class JsonParser(BaseParser):
+class JsonParser(ExtractFieldParser):
     '''
     Load json data.
     '''
@@ -31,21 +31,19 @@ class JsonParser(BaseParser):
                  out_field=None,
                  *args,
                  **kwargs):
-        super(JsonParser, self).__init__(*args, **kwargs)
-        self.field = field
+        super(JsonParser, self).__init__(field, *args, **kwargs)
         self.out_field = out_field
 
     def parse(self, event):
-        if self.field in event:
-            json_str = event[self.field]
-            try:
-                data = json.loads(json_str)
-                if self.out_field:
-                    event[self.out_field] = data
-                else:
-                    event.update(data)
-            except ValueError:
-                self.logger.error('Failed to load json')
+        json_str = self.data
+        try:
+            data = json.loads(json_str)
+            if self.out_field:
+                event[self.out_field] = data
+            else:
+                event.update(data)
+        except ValueError:
+            self.logger.error('Failed to load json')
         return event
 
 

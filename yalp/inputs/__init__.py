@@ -3,13 +3,12 @@
 yalp.inputs
 ===========
 '''
+import logging
 from datetime import datetime
 
 from ..config import settings
 from ..utils import get_hostname
 from ..pipeline import ThreadPipline
-
-import logging
 
 DEFAULT_DATE_FMT = '%Y-%m-%dT%H:%M:%S'
 

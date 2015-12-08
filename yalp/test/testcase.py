@@ -23,7 +23,7 @@ class YalpTestCase(unittest.TestCase):
     def setUpClass(cls):
         if cls._overridden_settings:
             cls._cls_overridden_context = override_settings(
-                **cls._overridden_settings)
+                **cls._overridden_settings)  # pylint: disable=not-a-mapping
             cls._cls_overridden_context.enable()
 
     @classmethod
