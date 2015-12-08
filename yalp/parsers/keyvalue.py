@@ -43,7 +43,7 @@ class KeyValueParser(ExtractFieldParser):
         self.pair_sep = pair_sep
 
     def parse(self, event):
-        pairs = self.data.split(self.pair_sep)
+        pairs = self.data.split(self.pair_sep)  # pylint: disable=no-member
         keyvalues = {}
         for pair in pairs:
             key, value = pair.split(self.sep, 1)
