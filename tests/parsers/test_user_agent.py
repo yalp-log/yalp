@@ -102,3 +102,36 @@ class TestUserAgentParser(unittest.TestCase):
             },
         }
         self.assertDictEqual(expected, parsed_event)
+
+    def test_nested(self):
+        event = {
+            'hostname': 'server_hostname',
+            'time_stamp': '2015-01-01T01:00:00',
+            'url': {
+                'query': {
+                    'ua': ['"Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"'],
+                }
+            }
+        }
+        parser = user_agent.Parser(field='url:query:ua:0', out_field='agent')
+        parsed_event = parser.run(event)
+        expected = {
+            'hostname': 'server_hostname',
+            'time_stamp': '2015-01-01T01:00:00',
+            'url': {
+                'query': {
+                    'ua': ['"Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"'],
+                }
+            },
+            'agent': {
+                'os': {'family': 'Linux', 'version': ''},
+                'browser': {'family': 'Firefox', 'version': '38'},
+                'device': {'brand': None, 'family': 'Other', 'model': None},
+                'is_bot': False,
+                'is_mobile': False,
+                'is_pc': True,
+                'is_tablet': False,
+                'is_touch_capable': False,
+            },
+        }
+        self.assertDictEqual(expected, parsed_event)

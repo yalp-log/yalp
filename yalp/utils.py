@@ -58,17 +58,22 @@ def get_hostname():
     return hostname
 
 
-def nested_get(data, lookup, default=KeyError):
+def nested_get(data, lookup):
     '''
-    Preform a nested dict lookup.
+    Preform a nested dict and list lookup.
     '''
     for key in lookup.split(':'):
-        try:
-            data = data[key]
-        except (KeyError, TypeError) as exc:
-            if default is KeyError:
-                raise exc
-            return default
+        if isinstance(data, list):
+            try:
+                idx = int(key)
+                data = data[idx]
+            except (ValueError, IndexError):
+                raise KeyError
+        else:
+            try:
+                data = data[key]
+            except (KeyError, TypeError):
+                raise KeyError
     return data
 
 
