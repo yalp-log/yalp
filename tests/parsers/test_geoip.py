@@ -6,6 +6,9 @@ tests.parsers.test_geoip
 import os
 import unittest
 
+import geohash
+from pygeoip import GeoIP
+
 from yalp.parsers import geoip
 
 
@@ -32,6 +35,22 @@ class TestGeoipParser(unittest.TestCase):
             from nose.plugins.skip import SkipTest
             raise SkipTest('No GeoLiteCity dat file')
 
+    def expected_hash(self, ip_address):
+        g = GeoIP(self.test_dat_file)
+        geo_info = g.record_by_addr(ip_address)
+        return geohash.encode(
+            geo_info.pop('latitude'),
+            geo_info.pop('longitude'),
+        )
+
+    def expected_loc_point(self, ip_address):
+        g = GeoIP(self.test_dat_file)
+        geo_info = g.record_by_addr(ip_address)
+        return [
+            geo_info.pop('longitude'),
+            geo_info.pop('latitude'),
+        ]
+
     def test_geoip(self):
         event = {
             'hostname': 'server_hostname',
@@ -52,7 +71,7 @@ class TestGeoipParser(unittest.TestCase):
                 'country_code3': 'USA',
                 'country_name': 'United States',
                 'dma_code': 0,
-                'location': '9yg00twy01mt',
+                'location': self.expected_hash('8.8.4.4'),
                 'metro_code': None,
                 'postal_code': None,
                 'region_code': None,
@@ -81,7 +100,7 @@ class TestGeoipParser(unittest.TestCase):
                 'country_code3': 'USA',
                 'country_name': 'United States',
                 'dma_code': 0,
-                'location': [-97.0, 38.0],
+                'location': self.expected_loc_point('8.8.4.4'),
                 'metro_code': None,
                 'postal_code': None,
                 'region_code': None,
