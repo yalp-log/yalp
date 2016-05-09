@@ -5,6 +5,10 @@ tests.parsers.test_chained
 '''
 import os
 import unittest
+
+import geohash
+from pygeoip import GeoIP
+
 from yalp.config import settings
 from yalp.pipeline.tasks import process_message
 
@@ -85,6 +89,14 @@ class TestLongChain(unittest.TestCase):
         settings.update(parser_config)
         process_message.reload_config()
 
+    def expected_hash(self, ip_address):
+        g = GeoIP(self.test_dat_file)
+        geo_info = g.record_by_addr(ip_address)
+        return geohash.encode(
+            geo_info.pop('latitude'),
+            geo_info.pop('longitude'),
+        )
+
     def test_long_chain(self):
         event = {
             'message': '8.8.4.4 - - [15/Sep/2015:13:41:35 -0400] "GET /index.html?param=val HTTP/1.1" 200 352 "-" "Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0"',
@@ -122,7 +134,7 @@ class TestLongChain(unittest.TestCase):
                       'country_code3': 'USA',
                       'country_name': 'United States',
                       'dma_code': 0,
-                      'location': '9yg00twy01mt',
+                      'location': self.expected_hash('8.8.4.4'),
                       'metro_code': None,
                       'postal_code': None,
                       'region_code': None,
