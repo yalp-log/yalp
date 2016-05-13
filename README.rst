@@ -1,7 +1,7 @@
 YALP
 ====
 
-|build-status| |coverage| |deps| |pypi| |docs| |health|
+|build-status| |coverage| |codecov| |deps| |pypi| |docs| |health|
 
 Distributed log parsing and collection.
 
@@ -11,9 +11,14 @@ Distributed log parsing and collection.
     :target: https://travis-ci.org/yalp-log/yalp
 
 .. |coverage| image:: http://img.shields.io/coveralls/yalp-log/yalp.svg?style=flat
-    :alt: Coverage Status
+    :alt: Coveralls Status
     :scale: 100%
     :target: https://coveralls.io/r/yalp-log/yalp?branch=master
+
+.. |codecov| image:: https://img.shields.io/codecov/c/github/yalp-log/yalp/master.svg
+    :alt: Codecov Status
+    :scale: 100%
+   :target: https://codecov.io/gh/yalp-log/yalp
 
 .. |deps| image:: http://img.shields.io/gemnasium/yalp-log/yalp.svg?style=flat
     :alt: Dependency Status
