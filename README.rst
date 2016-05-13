@@ -15,10 +15,10 @@ Distributed log parsing and collection.
     :scale: 100%
     :target: https://coveralls.io/r/yalp-log/yalp?branch=master
 
-.. |codecov| image:: https://img.shields.io/codecov/c/github/yalp-log/yalp/master.svg
+.. |codecov| image:: https://img.shields.io/codecov/c/github/yalp-log/yalp/master.svg?style=flat
     :alt: Codecov Status
     :scale: 100%
-   :target: https://codecov.io/gh/yalp-log/yalp
+    :target: https://codecov.io/gh/yalp-log/yalp
 
 .. |deps| image:: http://img.shields.io/gemnasium/yalp-log/yalp.svg?style=flat
     :alt: Dependency Status
@@ -36,9 +36,9 @@ Distributed log parsing and collection.
     :target: https://yalp.readthedocs.org
 
 .. |health| image:: https://landscape.io/github/yalp-log/yalp/master/landscape.svg?style=flat
-   :alt: Code Health
+    :alt: Code Health
     :scale: 100%
-   :target: https://landscape.io/github/yalp-log/yalp/master
+    :target: https://landscape.io/github/yalp-log/yalp/master
 
 
 Install and Configure
