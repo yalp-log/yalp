@@ -13,10 +13,12 @@ before_install:
   - wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
   - gunzip GeoLiteCity.dat.gz
 install:
-  - pip install tox coveralls
+  - pip install tox coveralls codecov
 script:
   - tox -e $TOX_ENV
-after_success: coveralls
+after_success:
+  - coveralls
+  - codecov
 
 deploy:
   provider: pypi
