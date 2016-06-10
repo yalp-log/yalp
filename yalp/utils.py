@@ -3,9 +3,13 @@
 yalp.utils
 ==========
 '''
+import logging
+
 from .pipeline import BasePipline
 from .exceptions import ImproperlyConfigured
 from .config import settings
+
+logger = logging.getLogger(__name__)
 
 
 YALP_PLUGIN_MAPPINGS = {
@@ -36,15 +40,19 @@ def get_yalp_class(plugin, config, plugin_type, instance_type=BasePipline):
         try:
             module_name = '.'.join([package, plugin])
             module = __import__(module_name, fromlist=[class_name])
+            logger.debug('Attempting to import %s.%s', module_name, class_name)
             class_ = getattr(module, class_name)
             if 'type' in config:
                 config['type_'] = config['type']
+            logger.debug('Using kwargs %s for instance', config)
             instance = class_(**config)
             if not isinstance(instance, instance_type):
+                logger.debug('Could not create instance')
                 raise ImportError
             return instance
         except (ImportError, NameError):
-            pass
+            logger.debug('Failed to import', exc_info=True)
+    logger.debug('No valid module found for yalp plugin')
     raise ImproperlyConfigured('Invalid parser module/class.')
 
 
